@@ -5,6 +5,7 @@ import java.util.UUID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 
@@ -14,6 +15,10 @@ import jakarta.persistence.Table;
 public class ScriptPurchaseEntity extends EntityBase {
 
     private final String uuid = UUID.randomUUID().toString();
+
+    @OneToOne
+    @JoinColumn(name = "key_id")
+    private KeyEntity key;
 
     @ManyToOne
     @JoinColumn(name="script_id")
@@ -39,6 +44,12 @@ public class ScriptPurchaseEntity extends EntityBase {
     }
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+    public KeyEntity getKey() {
+        return key;
+    }
+    public void setKey(KeyEntity key) {
+        this.key = key;
     }
 
 }

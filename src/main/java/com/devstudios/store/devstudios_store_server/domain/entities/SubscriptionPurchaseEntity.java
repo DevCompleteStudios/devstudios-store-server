@@ -6,6 +6,7 @@ import java.util.UUID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
@@ -19,6 +20,9 @@ public class SubscriptionPurchaseEntity extends EntityBase {
     private LocalDateTime dateAvailableForNewUser;
     private final String uuid = UUID.randomUUID().toString();
 
+    @OneToOne
+    @JoinColumn(name="key_id")
+    private KeyEntity key;
 
     @ManyToOne
     @JoinColumn(name = "subscription_id")
@@ -62,5 +66,12 @@ public class SubscriptionPurchaseEntity extends EntityBase {
     public void setUser(UserEntity user) {
         this.user = user;
     }
+    public KeyEntity getKey() {
+        return key;
+    }
+    public void setKey(KeyEntity key) {
+        this.key = key;
+    }
 
 }
+

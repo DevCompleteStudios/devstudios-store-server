@@ -1,6 +1,5 @@
 package com.devstudios.store.devstudios_store_server.domain.entities;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
@@ -17,7 +16,6 @@ public class RatingEntity extends EntityBase {
     @ManyToOne
     private UserEntity user;
 
-    @Column(unique=true)
     @OneToOne
     private ScriptPurchaseEntity purchase;
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 
@@ -17,7 +18,10 @@ public class ScriptEntity extends EntityBase {
     private Double price;
     private Boolean isAvailableInSubscription;
 
+    @OneToMany
     private List<RatingEntity> ratings = new ArrayList<>();
+
+    @OneToMany(mappedBy="script")
     private List<ScriptPurchaseEntity> purchases = new ArrayList<>();
 
 
