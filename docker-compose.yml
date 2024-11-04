@@ -1,0 +1,18 @@
+
+version: '3'
+
+services:
+  myDB:
+    image: postgres:15.3
+    container_name: devstudios-store
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=devstudios
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+
+
