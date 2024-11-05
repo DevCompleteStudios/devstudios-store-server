@@ -8,6 +8,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 
@@ -19,6 +20,9 @@ public class UserEntity extends EntityBase {
     @Column(unique=true)
     private String email;
     private String password;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private CodeAuthEntity codeAuth;
 
     @ManyToMany(cascade=CascadeType.PERSIST)
     private List<RoleEntity> roles = new ArrayList<>();
@@ -59,6 +63,12 @@ public class UserEntity extends EntityBase {
     }
     public void setScriptsPurchases(List<ScriptPurchaseEntity> scriptsPurchases) {
         this.scriptsPurchases = scriptsPurchases;
+    }
+    public CodeAuthEntity getCodeAuth() {
+        return codeAuth;
+    }
+    public void setCodeAuth(CodeAuthEntity codeAuth) {
+        this.codeAuth = codeAuth;
     }
 
 }
