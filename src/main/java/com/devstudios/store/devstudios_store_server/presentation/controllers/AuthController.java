@@ -5,10 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.devstudios.store.devstudios_store_server.application.dtos.auth.AuthDto;
 import com.devstudios.store.devstudios_store_server.application.services.AuthService;
+
+import jakarta.validation.Valid;
 
 
 
@@ -20,8 +24,8 @@ public class AuthController {
     AuthService service;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(){
-        var res = service.registerUser();
+    public ResponseEntity<?> register( @Valid @RequestBody AuthDto authDto ){
+        var res = service.registerUser(authDto);
         return ResponseEntity.status(res.getStatus()).body(res);
     }
 
