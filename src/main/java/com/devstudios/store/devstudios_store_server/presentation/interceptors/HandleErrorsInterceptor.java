@@ -47,6 +47,12 @@ public class HandleErrorsInterceptor {
         return getResponse(errors, 400);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleInternalServerError(Exception ex){
+        System.out.println(ex.getMessage()); // logger
+        return getResponse("Internal server error", 500);
+    }
+
 
     private ResponseEntity<?> getResponse( Object err, int status ){
         Map<String, Object> res = new HashMap<>();
