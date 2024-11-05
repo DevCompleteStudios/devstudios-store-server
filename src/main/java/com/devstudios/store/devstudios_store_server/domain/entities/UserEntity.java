@@ -28,7 +28,7 @@ public class UserEntity extends EntityBase {
     private List<RoleEntity> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade=CascadeType.PERSIST)
-    private List<SubscriptionPurchaseEntity> subscriptionPurchases = new ArrayList<>();
+    private List<SubscriptionPurchaseEntity> subscriptionsPurchases = new ArrayList<>();
 
     @OneToMany(mappedBy="user", cascade=CascadeType.MERGE)
     private List<ScriptPurchaseEntity> scriptsPurchases = new ArrayList<>();
@@ -53,10 +53,10 @@ public class UserEntity extends EntityBase {
         this.roles = roles;
     }
     public List<SubscriptionPurchaseEntity> getSubscriptionPurchases() {
-        return subscriptionPurchases;
+        return subscriptionsPurchases;
     }
-    public void setSubscriptionPurchases(List<SubscriptionPurchaseEntity> subscriptionPurchases) {
-        this.subscriptionPurchases = subscriptionPurchases;
+    public void setSubscriptionPurchases(List<SubscriptionPurchaseEntity> subscriptionsPurchases) {
+        this.subscriptionsPurchases = subscriptionsPurchases;
     }
     public List<ScriptPurchaseEntity> getScriptsPurchases() {
         return scriptsPurchases;
