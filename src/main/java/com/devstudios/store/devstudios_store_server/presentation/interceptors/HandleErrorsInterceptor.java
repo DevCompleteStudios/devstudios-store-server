@@ -2,10 +2,12 @@ package com.devstudios.store.devstudios_store_server.presentation.interceptors;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -32,6 +34,17 @@ public class HandleErrorsInterceptor {
         String message = field + ": " + value + " already exists";
 
         return getResponse(message, 400);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleArgumentNotValid( MethodArgumentNotValidException ex ){
+        List<String> errors = ex.getBindingResult().getFieldErrors()
+            .stream()
+            .map( e -> {
+                return e.getField() + ": " + e.getDefaultMessage();
+            }).toList();
+
+        return getResponse(errors, 400);
     }
 
 
