@@ -24,6 +24,10 @@ public class CustomException extends RuntimeException {
         return new CustomException(error, 404);
     }
 
+    public static CustomException unauthorizedException(String error){
+        return new CustomException(error, 401);
+    }
+
     public static CustomException internalServerException(String error){
         System.out.println(error);
         return new CustomException("Unexpected error, please try again later", 404);
