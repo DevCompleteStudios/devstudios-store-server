@@ -6,5 +6,6 @@ public interface IKeyProjection {
 
     public String getValue();
     public String getCurrentUserRobloxId();
+    public Long getId();
 
 }
