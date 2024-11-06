@@ -31,7 +31,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login( @Valid @RequestBody AuthDto authDto ){
-        var res = service.loginUser();
+        var res = service.loginUser(authDto);
         return ResponseEntity.status(res.getStatus()).body(res);
     }
 

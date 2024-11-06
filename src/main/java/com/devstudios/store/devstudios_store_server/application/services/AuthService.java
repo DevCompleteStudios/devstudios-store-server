@@ -10,6 +10,7 @@ import com.devstudios.store.devstudios_store_server.application.interfaces.servi
 import com.devstudios.store.devstudios_store_server.application.interfaces.services.IJwtService;
 import com.devstudios.store.devstudios_store_server.domain.entities.UserEntity;
 import com.devstudios.store.devstudios_store_server.domain.mappers.AutoMapper;
+import com.devstudios.store.devstudios_store_server.infrastructure.CustomExceptions.CustomException;
 
 
 
@@ -34,6 +35,7 @@ public class AuthService {
 
     public ResponseDto<IUserProjection> registerUser(AuthDto authDto){
         UserEntity user = new UserEntity();
+
         String token = jwtService.createJwt(user.getRoles(), authDto.getEmail());
         String passwordHash = bcrypt.hashPassword(authDto.getPassword());
 
@@ -41,20 +43,24 @@ public class AuthService {
         user.setPassword(passwordHash);
 
         UserEntity userDb = userRepository.save(user);
-        ResponseDto<IUserProjection> res = new ResponseDto<>();
+        IUserProjection userProjection = mapper.userEntityToProjection(userDb);
 
-        res.setStatus(201);
-        res.setData(
-            mapper.userEntityToProjection(userDb)
-        );
-        res.setMessage("Succes");
-        res.setToken(token);
-
-        return res;
+        return new ResponseDto<>(token, 201, userProjection);
     }
 
-    public ResponseDto<?> loginUser(){
-        return null;
+    public ResponseDto<IUserProjection> loginUser( AuthDto authDto ){
+        UserEntity user = userRepository.findByEmail(authDto.getEmail())
+            .orElseThrow( () -> CustomException.notFoundException("Account not exist"));
+
+        if( !user.getIsActive() )
+            throw CustomException.badRequestException("Account is not active");
+        if( !bcrypt.comparePassword(authDto.getPassword(), user.getPassword()) )
+            throw CustomException.badRequestException("Email or password is not valid");
+
+        IUserProjection userProjection = mapper.userEntityToProjection(user);
+        String token = jwtService.createJwt(user.getRoles(), authDto.getEmail());
+
+        return new ResponseDto<>(token, 200, userProjection);
     }
 
     public ResponseDto<?> forgotPassword(){

@@ -11,7 +11,7 @@ import com.devstudios.store.devstudios_store_server.application.interfaces.servi
 @Service
 public class BcryptServiceImpl implements IBcryptService {
 
-    private static final PasswordEncoder encode = new BCryptPasswordEncoder();
+    private static final PasswordEncoder encode = new BCryptPasswordEncoder(8);
 
 
     @Override

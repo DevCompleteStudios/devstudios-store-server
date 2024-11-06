@@ -6,11 +6,29 @@ import java.time.LocalDateTime;
 
 public class ResponseDto<T> {
 
-    private String message;
+    private String message = "Succes";
     private String token;
     private int status;
     private LocalDateTime date = LocalDateTime.now();
     private T data;
+
+
+    public ResponseDto(){}
+
+
+    public ResponseDto(String token, int status, T data) {
+        this.token = token;
+        this.status = status;
+        this.data = data;
+    }
+
+    public ResponseDto(T data, int status, String token, String message ) {
+        this(token, status, data);
+        this.message = message;
+    }
+
+
+
 
 
     public String getMessage() {
