@@ -1,5 +1,7 @@
 package com.devstudios.store.devstudios_store_server.application.interfaces.projections;
 
+import com.devstudios.store.devstudios_store_server.application.interfaces.enums.ScriptMethodPayment;
+
 
 
 public interface IScriptPreviewProjection  {
@@ -8,6 +10,6 @@ public interface IScriptPreviewProjection  {
     public String getName();
     public String getDescription();
     public Double getPrice();
-    public Boolean getIsAvailableInSubscription();
+    public ScriptMethodPayment getMethodPayment();
 
 }

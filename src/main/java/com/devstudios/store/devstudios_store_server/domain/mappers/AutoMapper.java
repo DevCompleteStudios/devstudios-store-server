@@ -57,7 +57,7 @@ public class AutoMapper {
 
         dto.setDescription(entity.getDescription());
         dto.setId(entity.getId());
-        dto.setIsAvailableInSubscription(entity.getIsAvailableInSubscription());
+        dto.setMethodPayment(entity.getMethodPayment());
         dto.setName(entity.getName());
         dto.setPrice(entity.getPrice());
 

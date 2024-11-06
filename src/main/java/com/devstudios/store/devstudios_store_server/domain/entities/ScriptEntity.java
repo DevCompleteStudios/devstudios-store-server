@@ -3,7 +3,11 @@ package com.devstudios.store.devstudios_store_server.domain.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.devstudios.store.devstudios_store_server.application.interfaces.enums.ScriptMethodPayment;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -16,7 +20,10 @@ public class ScriptEntity extends EntityBase {
     private String name;
     private String description;
     private Double price;
-    private Boolean isAvailableInSubscription;
+
+    @Enumerated(EnumType.STRING)
+    private ScriptMethodPayment methodPayment;
+
 
     @OneToMany
     private List<RatingEntity> ratings = new ArrayList<>();
@@ -43,12 +50,6 @@ public class ScriptEntity extends EntityBase {
     public void setPrice(Double price) {
         this.price = price;
     }
-    public Boolean getIsAvailableInSubscription() {
-        return isAvailableInSubscription;
-    }
-    public void setIsAvailableInSubscription(Boolean isAvailableInSubscription) {
-        this.isAvailableInSubscription = isAvailableInSubscription;
-    }
     public List<RatingEntity> getRatings() {
         return ratings;
     }
@@ -60,6 +61,12 @@ public class ScriptEntity extends EntityBase {
     }
     public void setPurchases(List<ScriptPurchaseEntity> purchases) {
         this.purchases = purchases;
+    }
+    public ScriptMethodPayment getMethodPayment() {
+        return methodPayment;
+    }
+    public void setMethodPayment(ScriptMethodPayment methodPayment) {
+        this.methodPayment = methodPayment;
     }
 
 }
