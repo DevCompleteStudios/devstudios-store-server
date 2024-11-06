@@ -27,6 +27,7 @@ public class CreateScriptDto {
 
     @Min(value = 1)
     @Max(99)
+    @NotNull
     private Double price;
 
     @Enumerated(EnumType.STRING)
