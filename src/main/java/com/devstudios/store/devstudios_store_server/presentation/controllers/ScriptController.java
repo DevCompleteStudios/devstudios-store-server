@@ -1,6 +1,7 @@
 package com.devstudios.store.devstudios_store_server.presentation.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +19,9 @@ import jakarta.validation.Valid;
 public class ScriptController {
 
 
-    @PostMapping("/create-script-service")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/create-script")
     public ResponseEntity<?> postMethodName( @Valid @RequestBody CreateScriptDto scriptDto) {
-
         return null;
     }
 
