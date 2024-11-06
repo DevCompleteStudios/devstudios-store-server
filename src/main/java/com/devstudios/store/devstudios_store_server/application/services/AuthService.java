@@ -1,5 +1,6 @@
 package com.devstudios.store.devstudios_store_server.application.services;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.devstudios.store.devstudios_store_server.application.dtos.auth.AuthDto;
@@ -72,7 +73,7 @@ public class AuthService {
     }
 
     public ResponseDto<?> verifyToken(){
-        return null;
+        return new ResponseDto<>("a", 200, SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
 }
