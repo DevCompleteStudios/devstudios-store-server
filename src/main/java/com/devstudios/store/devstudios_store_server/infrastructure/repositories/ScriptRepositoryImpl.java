@@ -1,10 +1,13 @@
 package com.devstudios.store.devstudios_store_server.infrastructure.repositories;
 
-import java.awt.print.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IScriptProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptRepository;
@@ -12,8 +15,7 @@ import com.devstudios.store.devstudios_store_server.application.interfaces.repos
 import com.devstudios.store.devstudios_store_server.domain.entities.ScriptEntity;
 
 
-
-
+@Repository
 public class ScriptRepositoryImpl implements IScriptRepository {
 
     @Autowired
@@ -30,14 +32,17 @@ public class ScriptRepositoryImpl implements IScriptRepository {
         return repositoryJpa.findAll();
     }
 
-    @Override
-    public List<IScriptProjection> findAllScripts(Pageable pageable) {
-        return repositoryJpa.findAllScripts(pageable);
-    }
 
     @Override
     public Optional<IScriptProjection> findOneById(Long id) {
-        return repositoryJpa.findOneById(id);
+        return repositoryJpa.findOneScriptById(id);
     }
+
+    @Override
+    public Page<IScriptProjection> findAllScripts(Pageable pageable) {
+        return repositoryJpa.getAll(pageable);
+    }
+
+
 
 }

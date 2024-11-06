@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.devstudios.store.devstudios_store_server.application.interfaces.enums.ScriptMethodPayment;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -17,6 +18,7 @@ import jakarta.persistence.Table;
 @Table(name = "scripts")
 public class ScriptEntity extends EntityBase {
 
+    @Column(unique=true)
     private String name;
     private String description;
     private Double price;
