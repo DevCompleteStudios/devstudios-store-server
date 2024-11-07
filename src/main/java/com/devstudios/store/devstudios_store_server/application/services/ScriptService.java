@@ -23,6 +23,8 @@ import com.devstudios.store.devstudios_store_server.infrastructure.CustomExcepti
 @Service
 public class ScriptService {
 
+    private final String pathImages = "/images/services";
+
     IScriptRepository scriptRepository;
     IFilesService filesService;
 
@@ -34,7 +36,7 @@ public class ScriptService {
 
     public ResponseDto<ScriptEntity> create( CreateScriptDto dto ){
         ScriptEntity script = new ScriptEntity();
-        String url = filesService.saveFile("/images/services", dto.getImage());
+        String url = filesService.saveFile(pathImages, dto.getImage());
 
         script.setDescription(dto.getDescription());
         script.setMethodPayment(dto.getMethodPayment());
@@ -82,7 +84,7 @@ public class ScriptService {
             if( updateScriptDto.getYoutubeLink() != null )
                 script.setYoutubeLink(updateScriptDto.getYoutubeLink());
             if( updateScriptDto.getImage() != null ){
-                String image = filesService.saveFile("/images/services", updateScriptDto.getImage());
+                String image = filesService.updateFile(script.getImage(), pathImages, updateScriptDto.getImage());
                 script.setImage(image);
             }
 
