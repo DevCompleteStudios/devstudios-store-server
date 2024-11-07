@@ -43,6 +43,11 @@ public class ScriptRepositoryImpl implements IScriptRepository {
         return repositoryJpa.getAll(pageable);
     }
 
+    @Override
+    public Optional<ScriptEntity> findById(Long id) {
+        return repositoryJpa.findById(id);
+    }
+
 
 
 }

@@ -19,6 +19,7 @@ public interface IScriptRepository {
     public List<ScriptEntity> findAll();
     public Page<IScriptProjection> findAllScripts( Pageable pageable );
     public Optional<IScriptProjection> findOneById( Long id );
+    public Optional<ScriptEntity> findById( Long id );
 
 }
 
