@@ -6,6 +6,8 @@ target/
 
 postgres/
 mongodb/
+envs-dev.properties
+
 
 ### STS ###
 .apt_generated

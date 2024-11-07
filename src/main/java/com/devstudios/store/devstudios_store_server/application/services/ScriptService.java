@@ -24,20 +24,24 @@ import com.devstudios.store.devstudios_store_server.infrastructure.CustomExcepti
 public class ScriptService {
 
     IScriptRepository scriptRepository;
+    IFilesService filesService;
 
-    public ScriptService( IScriptRepository scriptRepository ){
+    public ScriptService( IScriptRepository scriptRepository, IFilesService filesService ){
         this.scriptRepository = scriptRepository;
+        this.filesService = filesService;
     }
 
 
     public ResponseDto<ScriptEntity> create( CreateScriptDto dto ){
         ScriptEntity script = new ScriptEntity();
+        String url = filesService.saveFile("/images/services", dto.getImage());
 
         script.setDescription(dto.getDescription());
         script.setMethodPayment(dto.getMethodPayment());
         script.setName(dto.getName());
         script.setPrice(dto.getPrice());
         script.setYoutubeLink(dto.getYoutubeLink());
+        script.setImage(url);
 
         script = scriptRepository.save(script);
 
@@ -77,6 +81,10 @@ public class ScriptService {
                 script.setMethodPayment(updateScriptDto.getMethodPayment());
             if( updateScriptDto.getYoutubeLink() != null )
                 script.setYoutubeLink(updateScriptDto.getYoutubeLink());
+            if( updateScriptDto.getImage() != null ){
+                String image = filesService.saveFile("/images/services", updateScriptDto.getImage());
+                script.setImage(image);
+            }
 
             scriptRepository.save(script);
         }
