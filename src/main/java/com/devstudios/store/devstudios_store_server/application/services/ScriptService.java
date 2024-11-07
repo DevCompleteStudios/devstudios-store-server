@@ -37,11 +37,13 @@ public class ScriptService {
         script.setMethodPayment(dto.getMethodPayment());
         script.setName(dto.getName());
         script.setPrice(dto.getPrice());
+        script.setYoutubeLink(dto.getYoutubeLink());
 
         script = scriptRepository.save(script);
 
         return new ResponseDto<>(null, 201, script);
     }
+
 
     public ResponsePaginationDto<List<IScriptProjection>> findAll(PaginationDto paginationDto){
         Pageable page = PageRequest.of(paginationDto.getPage(), paginationDto.getElements());
@@ -52,12 +54,15 @@ public class ScriptService {
         return new ResponsePaginationDto<>(scripts.getTotalPages(), scripts.getTotalElements(), null, 200, elements);
     }
 
+
     public ResponseDto<IScriptProjection> updateScript(Long id, UpdateScriptDto updateScriptDto ){
         if(
             updateScriptDto.getDescription() != null
             || updateScriptDto.getMethodPayment() != null
             || updateScriptDto.getName() != null
             || updateScriptDto.getPrice() != null
+            || updateScriptDto.getYoutubeLink() != null
+            || updateScriptDto.getImage() != null
         ){
             ScriptEntity script = scriptRepository.findById(id)
                 .orElseThrow( () -> CustomException.notFoundException("Script not exist"));
@@ -70,6 +75,8 @@ public class ScriptService {
                 script.setName(updateScriptDto.getName());
             if( updateScriptDto.getMethodPayment() != null )
                 script.setMethodPayment(updateScriptDto.getMethodPayment());
+            if( updateScriptDto.getYoutubeLink() != null )
+                script.setYoutubeLink(updateScriptDto.getYoutubeLink());
 
             scriptRepository.save(script);
         }

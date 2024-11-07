@@ -15,6 +15,8 @@ public interface IScriptProjection extends IProjection {
     public ScriptMethodPayment getMethodPayment();
     public List<IRatingProjection> getRatings();
     public List<IScriptPurchasePreviewProjection> getPurchases();
+    public String getYoutubeLink();
+    public String getImage();
 
 }
 

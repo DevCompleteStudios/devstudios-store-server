@@ -1,5 +1,8 @@
 package com.devstudios.store.devstudios_store_server.application.dtos.script;
 
+import org.hibernate.validator.constraints.URL;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.devstudios.store.devstudios_store_server.application.interfaces.enums.ScriptMethodPayment;
 
 import jakarta.persistence.EnumType;
@@ -34,6 +37,12 @@ public class CreateScriptDto {
     @NotNull
     private ScriptMethodPayment methodPayment;
 
+    @URL
+    private String youtubeLink;
+
+    @NotNull
+    private MultipartFile image;
+
 
     public String getName() {
         return name;
@@ -58,6 +67,18 @@ public class CreateScriptDto {
     }
     public void setMethodPayment(ScriptMethodPayment methodPayment) {
         this.methodPayment = methodPayment;
+    }
+    public String getYoutubeLink() {
+        return youtubeLink;
+    }
+    public void setYoutubeLink(String youtubeLink) {
+        this.youtubeLink = youtubeLink;
+    }
+    public MultipartFile getImage() {
+        return image;
+    }
+    public void setImage(MultipartFile image) {
+        this.image = image;
     }
 
 }

@@ -23,6 +23,9 @@ public class ScriptEntity extends EntityBase {
     private String description;
     private Double price;
 
+    private String youtubeLink;
+    private String image;
+
     @Enumerated(EnumType.STRING)
     private ScriptMethodPayment methodPayment;
 
@@ -69,6 +72,18 @@ public class ScriptEntity extends EntityBase {
     }
     public void setMethodPayment(ScriptMethodPayment methodPayment) {
         this.methodPayment = methodPayment;
+    }
+    public String getYoutubeLink() {
+        return youtubeLink;
+    }
+    public void setYoutubeLink(String youtubeLink) {
+        this.youtubeLink = youtubeLink;
+    }
+    public String getImage() {
+        return image;
+    }
+    public void setImage(String image) {
+        this.image = image;
     }
 
 }

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,7 +32,7 @@ public class ScriptController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/create-script")
-    public ResponseEntity<?> postMethodName( @Valid @RequestBody CreateScriptDto scriptDto) {
+    public ResponseEntity<?> postMethodName( @Valid @ModelAttribute CreateScriptDto scriptDto) {
         var res = service.create(scriptDto);
         return ResponseEntity.status(res.getStatus()).body(res);
     }
@@ -46,7 +45,7 @@ public class ScriptController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update-script/{id}")
-    public ResponseEntity<?> updateScript( @PathVariable Long id, @Valid @RequestBody UpdateScriptDto updateScriptDto ){
+    public ResponseEntity<?> updateScript( @PathVariable Long id, @Valid @ModelAttribute UpdateScriptDto updateScriptDto ){
         var res = service.updateScript(id, updateScriptDto);
         return ResponseEntity.status(res.getStatus()).body(res);
     }
