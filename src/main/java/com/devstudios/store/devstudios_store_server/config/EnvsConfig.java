@@ -2,21 +2,25 @@ package com.devstudios.store.devstudios_store_server.config;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Base64;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
 
-import io.jsonwebtoken.Jwts;
+import io.github.cdimascio.dotenv.Dotenv;
+import io.jsonwebtoken.security.Keys;
+
+
 
 
 public abstract class EnvsConfig {
 
-    private static final SecretKey JWT_KEY = Jwts.SIG.HS256.key().build();
+    private static final String KEY_JWT = Dotenv.load().get("JWT_KEY");
     private static final int MINUTES_EXPIRED_JWT = 60;
 
 
     public static SecretKey getKeyJwt(){
-        return JWT_KEY;
+        return Keys.hmacShaKeyFor(Base64.getDecoder().decode(KEY_JWT));
     }
 
     public static Date getJwtExpirationDate() {
