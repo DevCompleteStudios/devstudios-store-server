@@ -48,5 +48,4 @@ public class CodeAuthEntity {
         return id;
     }
 
-
 }

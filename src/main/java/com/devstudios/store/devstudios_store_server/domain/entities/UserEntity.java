@@ -6,6 +6,7 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -21,7 +22,8 @@ public class UserEntity extends EntityBase {
     private String email;
     private String password;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.PERSIST, orphanRemoval=true)
+    @JoinColumn(name="code_auth_id")
     private CodeAuthEntity codeAuth;
 
     @ManyToMany(cascade=CascadeType.PERSIST)

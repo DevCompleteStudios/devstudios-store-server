@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devstudios.store.devstudios_store_server.application.dtos.auth.AuthDto;
+import com.devstudios.store.devstudios_store_server.application.dtos.auth.ForgotPasswordDto;
 import com.devstudios.store.devstudios_store_server.application.services.AuthService;
 
 import jakarta.validation.Valid;
@@ -36,8 +37,8 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(){
-        var res = service.forgotPassword();
+    public ResponseEntity<?> forgotPassword( @Valid @RequestBody ForgotPasswordDto forgotPasswordDto ){
+        var res = service.forgotPassword(forgotPasswordDto);
         return ResponseEntity.status(res.getStatus()).body(res);
     }
 

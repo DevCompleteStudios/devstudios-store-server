@@ -17,6 +17,7 @@ public class SubscriptionEntity extends EntityBase {
     private String description;
     private String name;
     private Long daysDuration = 30L;
+    private List<String> contentList;
 
     @OneToMany(mappedBy="subscription")
     private List<SubscriptionPurchaseEntity> subscriptionsPurchases = new ArrayList<>();
@@ -51,6 +52,12 @@ public class SubscriptionEntity extends EntityBase {
     }
     public void setSubscriptionsPurchases(List<SubscriptionPurchaseEntity> subscriptionsPurchases) {
         this.subscriptionsPurchases = subscriptionsPurchases;
+    }
+    public List<String> getContentList() {
+        return contentList;
+    }
+    public void setContentList(List<String> contentList) {
+        this.contentList = contentList;
     }
 
 }
