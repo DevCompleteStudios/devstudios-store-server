@@ -116,8 +116,14 @@ public class AuthService {
     }
 
 
-    public ResponseDto<?> verifyToken(){
-        return new ResponseDto<>("a", 200, SecurityContextHolder.getContext().getAuthentication().getName());
+    public ResponseDto<String> verifyToken(){
+        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity user = userRepository.findByEmail(currentUser)
+            .orElseThrow( () -> CustomException.badRequestException("token expired"));
+
+        String token = this.jwtService.createJwt(user.getRoles(), user.getEmail());
+
+        return new ResponseDto<>(token, 200, "Renewed token");
     }
 
 }
