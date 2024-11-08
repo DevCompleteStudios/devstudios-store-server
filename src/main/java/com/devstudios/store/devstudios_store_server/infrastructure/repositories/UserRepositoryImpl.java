@@ -46,5 +46,10 @@ public class UserRepositoryImpl implements IUserRepository {
         return repositoryJpa.findOneUserByEmail(email);
     }
 
+    @Override
+    public Optional<UserEntity> findByCodeAuth(String code) {
+        return repositoryJpa.findByCodeAuth_Code(code);
+    }
+
 
 }

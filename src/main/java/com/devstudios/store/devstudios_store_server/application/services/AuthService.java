@@ -1,10 +1,13 @@
 package com.devstudios.store.devstudios_store_server.application.services;
 
+import java.time.LocalDateTime;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.devstudios.store.devstudios_store_server.application.dtos.auth.AuthDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.auth.ForgotPasswordDto;
+import com.devstudios.store.devstudios_store_server.application.dtos.auth.ResetPasswordDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.ResponseDto;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IUserProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IUserRepository;
@@ -23,12 +26,14 @@ import com.devstudios.store.devstudios_store_server.infrastructure.CustomExcepti
 @Service
 public class AuthService {
 
-    IUserRepository userRepository;
-    IJwtService jwtService;
-    IBcryptService bcrypt;
-    AutoMapper mapper;
-    IRandomService randomService;
-    IMailerService mailerService;
+    private final String MESSAGE_CODE_ERROR = "code already expired";
+
+    private final IUserRepository userRepository;
+    private final IJwtService jwtService;
+    private final IBcryptService bcrypt;
+    private final AutoMapper mapper;
+    private final IRandomService randomService;
+    private final IMailerService mailerService;
 
 
     public AuthService( IUserRepository userRepository, IJwtService jwtService, IBcryptService bcrypt, AutoMapper mapper, IRandomService randomService,
@@ -90,8 +95,24 @@ public class AuthService {
     }
 
 
-    public ResponseDto<?> resetPassword(){
-        return null;
+    public ResponseDto<IUserProjection> resetPassword(ResetPasswordDto resetPasswordDto){
+        UserEntity user = userRepository.findByCodeAuth(resetPasswordDto.getCode())
+            .orElseThrow( () -> CustomException.badRequestException(MESSAGE_CODE_ERROR));
+        LocalDateTime now = LocalDateTime.now();
+
+
+        if( user.getCodeAuth().getExpiredDate().isBefore(now) )
+            throw CustomException.badRequestException(MESSAGE_CODE_ERROR);
+        String passwordHash = bcrypt.hashPassword(resetPasswordDto.getPassword());
+
+        user.setCodeAuth(null);
+        user.setPassword(passwordHash);
+        IUserProjection u = mapper.userEntityToProjection(user);
+        String token = jwtService.createJwt(user.getRoles(), user.getEmail());
+
+        userRepository.save(user);
+
+        return new ResponseDto<>(token, 200, u);
     }
 
 

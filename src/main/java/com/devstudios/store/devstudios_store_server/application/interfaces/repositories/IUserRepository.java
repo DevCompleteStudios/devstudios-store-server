@@ -13,6 +13,7 @@ public interface IUserRepository {
 
     public UserEntity save(UserEntity user);
     public Optional<UserEntity> findById(Long id);
+    public Optional<UserEntity> findByCodeAuth(String code);
     public Optional<UserEntity> findByEmail(String email);
     public Optional<IUserProjection> findUserById( Long id );
     public Optional<IUserProjection> findUserByEmail( String email );

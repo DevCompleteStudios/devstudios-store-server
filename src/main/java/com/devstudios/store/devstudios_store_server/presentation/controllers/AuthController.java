@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.devstudios.store.devstudios_store_server.application.dtos.auth.AuthDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.auth.ForgotPasswordDto;
+import com.devstudios.store.devstudios_store_server.application.dtos.auth.ResetPasswordDto;
 import com.devstudios.store.devstudios_store_server.application.services.AuthService;
 
 import jakarta.validation.Valid;
@@ -43,8 +44,8 @@ public class AuthController {
     }
 
     @PutMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(){
-        var res = service.resetPassword();
+    public ResponseEntity<?> resetPassword( @Valid @RequestBody ResetPasswordDto resetPasswordDto ){
+        var res = service.resetPassword(resetPasswordDto);
         return ResponseEntity.status(res.getStatus()).body(res);
     }
 
