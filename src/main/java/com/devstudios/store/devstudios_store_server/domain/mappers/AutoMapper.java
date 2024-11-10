@@ -60,6 +60,8 @@ public class AutoMapper {
         dto.setMethodPayment(entity.getMethodPayment());
         dto.setName(entity.getName());
         dto.setPrice(entity.getPrice());
+        dto.setIsActive(entity.getIsActive());
+        dto.setImage(entity.getImage());
 
         return dto;
     }

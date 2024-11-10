@@ -1,5 +1,6 @@
 package com.devstudios.store.devstudios_store_server.application.dtos.script;
 
+
 import com.devstudios.store.devstudios_store_server.application.interfaces.enums.ScriptMethodPayment;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IScriptPreviewProjection;
 
@@ -12,6 +13,8 @@ public class ScriptPreviewDto implements IScriptPreviewProjection {
     private String description;
     private Double price;
     private ScriptMethodPayment methodPayment;
+    private Boolean isActive;
+    private String image;
 
 
     public ScriptPreviewDto(){}
@@ -61,6 +64,21 @@ public class ScriptPreviewDto implements IScriptPreviewProjection {
     public void setMethodPayment(ScriptMethodPayment methodPayment) {
         this.methodPayment = methodPayment;
     }
+    @Override
+    public Boolean getIsActive() {
+        return isActive;
+    }
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+    @Override
+    public String getImage() {
+        return image;
+    }
+    public void setImage(String image) {
+        this.image = image;
+    }
+
 
 
 }

@@ -12,6 +12,7 @@ import com.devstudios.store.devstudios_store_server.application.dtos.script.Upda
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.PaginationDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.ResponseDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.ResponsePaginationDto;
+import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IScriptPreviewProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IScriptProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptRepository;
 import com.devstudios.store.devstudios_store_server.domain.entities.ScriptEntity;
@@ -51,11 +52,11 @@ public class ScriptService {
     }
 
 
-    public ResponsePaginationDto<List<IScriptProjection>> findAll(PaginationDto paginationDto){
+    public ResponsePaginationDto<List<IScriptPreviewProjection>> findAll(PaginationDto paginationDto){
         Pageable page = PageRequest.of(paginationDto.getPage(), paginationDto.getElements());
-        Page<IScriptProjection> scripts = scriptRepository.findAllScripts(page);
+        Page<IScriptPreviewProjection> scripts = scriptRepository.findAllScripts(page);
 
-        List<IScriptProjection> elements = scripts.getContent();
+        List<IScriptPreviewProjection> elements = scripts.getContent();
 
         return new ResponsePaginationDto<>(scripts.getTotalPages(), scripts.getTotalElements(), null, 200, elements);
     }
@@ -98,5 +99,13 @@ public class ScriptService {
                 .orElseThrow( () -> CustomException.notFoundException("Error updating script, try again later."))
         );
     }
+
+    public ResponseDto<IScriptProjection> findById(Long id){
+        IScriptProjection script = scriptRepository.findOneById(id)
+            .orElseThrow( () -> CustomException.notFoundException("Script not found"));
+
+        return new ResponseDto<>(null, 200, script);
+    }
+
 
 }

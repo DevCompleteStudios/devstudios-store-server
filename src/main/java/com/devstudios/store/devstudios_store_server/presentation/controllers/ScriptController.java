@@ -22,6 +22,7 @@ import jakarta.validation.Valid;
 
 
 
+
 @RestController
 @RequestMapping("/api/scripts")
 public class ScriptController {
@@ -42,6 +43,13 @@ public class ScriptController {
         var res = service.findAll(paginationDto);
         return ResponseEntity.status(200).body(res);
     }
+
+    @GetMapping("/find-by-id/{id}")
+    public ResponseEntity<?> getMethodName( @PathVariable Long id ) {
+        var res = service.findById(id);
+        return ResponseEntity.status(res.getStatus()).body(res);
+    }
+
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update-script/{id}")

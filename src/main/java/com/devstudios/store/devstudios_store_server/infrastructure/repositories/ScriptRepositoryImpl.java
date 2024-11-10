@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IScriptPreviewProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IScriptProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptRepositoryJpa;
@@ -39,7 +40,7 @@ public class ScriptRepositoryImpl implements IScriptRepository {
     }
 
     @Override
-    public Page<IScriptProjection> findAllScripts(Pageable pageable) {
+    public Page<IScriptPreviewProjection> findAllScripts(Pageable pageable) {
         return repositoryJpa.getAll(pageable);
     }
 

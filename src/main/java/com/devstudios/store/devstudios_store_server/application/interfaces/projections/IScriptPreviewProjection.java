@@ -11,5 +11,7 @@ public interface IScriptPreviewProjection  {
     public String getDescription();
     public Double getPrice();
     public ScriptMethodPayment getMethodPayment();
+    public Boolean getIsActive();
+    public String getImage();
 
 }
