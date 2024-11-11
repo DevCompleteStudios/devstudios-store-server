@@ -1,14 +1,17 @@
 package com.devstudios.store.devstudios_store_server.infrastructure.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.devstudios.store.devstudios_store_server.application.interfaces.enums.TypePayment;
 import com.devstudios.store.devstudios_store_server.application.interfaces.services.IPaymentsService;
+import com.devstudios.store.devstudios_store_server.application.services.HandlePaymentsService;
 import com.devstudios.store.devstudios_store_server.infrastructure.CustomExceptions.CustomException;
 import com.stripe.Stripe;
-import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
+import com.stripe.model.EventDataObjectDeserializer;
+import com.stripe.model.StripeObject;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import com.stripe.param.checkout.SessionCreateParams;
@@ -19,6 +22,9 @@ import jakarta.annotation.PostConstruct;
 
 @Service
 public class PaymentsServiceStripeImpl implements IPaymentsService {
+
+    @Autowired
+    HandlePaymentsService handlePaymentsService;
 
     @Value("${stripe.api.key}")
     private String stripeApiKey;
@@ -76,23 +82,43 @@ public class PaymentsServiceStripeImpl implements IPaymentsService {
 
     @Override
     public void paymentsHook(String payload, String sigHeader) {
+        Event event;
         try {
-            Event event = Webhook.constructEvent(payload, sigHeader, stripeWebhook);
+            event = Webhook.constructEvent(
+                payload, sigHeader, stripeWebhook
+            );
+        } catch (Exception e) {
+            throw CustomException.internalServerException(e.getMessage());
+        }
 
-            if ("checkout.session.completed".equals(event.getType())) {
-                Session session = (Session) event.getDataObjectDeserializer().getObject().orElseThrow();
+        EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
 
-                // obtenemos la metadata
-                String email = session.getMetadata().get("email");
-                String orderId = session.getMetadata().get("orderId");
-                String type = session.getMetadata().get("type");
+        StripeObject stripeObject = null;
+        if (dataObjectDeserializer.getObject().isPresent()) {
+            stripeObject = dataObjectDeserializer.getObject().get();
+        } else {
+            System.out.println(event.getApiVersion());
+            System.out.println(Stripe.API_VERSION);
+            throw CustomException.badRequestException("is not valid");
+        }
+
+        switch (event.getType()) {
+            case "checkout.session.completed": {
+                Session paymentIntent = (Session) stripeObject;
+
+                String email = paymentIntent.getMetadata().get("email");
+                String orderId = paymentIntent.getMetadata().get("orderId");
+                String type = paymentIntent.getMetadata().get("type");
 
                 if( email != null && orderId != null && type != null ){
-                    System.out.println("Alguien ha pagado: " + email + " - " + orderId + " - " + type);
+                    handlePaymentsService.HandlePayment(email, orderId, type);
                 }
+                break;
             }
-        } catch (SignatureVerificationException e) {
-            throw CustomException.internalServerException(e.getMessage());
+            // ... handle other event types
+            default:
+                System.out.println("Otro pago: " + event.getType());
+                break;
         }
     }
 

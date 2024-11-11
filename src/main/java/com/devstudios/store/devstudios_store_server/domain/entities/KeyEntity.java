@@ -25,14 +25,6 @@ public class KeyEntity extends EntityBase {
 
     public KeyEntity(){}
 
-    public KeyEntity(ScriptPurchaseEntity scriptPurchase){
-        this.scriptPurchase = scriptPurchase;
-    }
-
-    public KeyEntity(SubscriptionPurchaseEntity subscriptionPurchase){
-        this.subscriptionPurchase = subscriptionPurchase;
-    }
-
 
 
     public String getCurrentUserRobloxId() {
