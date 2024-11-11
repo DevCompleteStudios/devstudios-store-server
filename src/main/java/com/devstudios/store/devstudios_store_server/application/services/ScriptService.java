@@ -15,7 +15,11 @@ import com.devstudios.store.devstudios_store_server.application.dtos.shared.Resp
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IScriptPreviewProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IScriptProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptRepository;
+import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IUserRepository;
+import com.devstudios.store.devstudios_store_server.application.interfaces.services.IJwtService;
+import com.devstudios.store.devstudios_store_server.application.interfaces.services.IPaymentsService;
 import com.devstudios.store.devstudios_store_server.domain.entities.ScriptEntity;
+import com.devstudios.store.devstudios_store_server.domain.entities.UserEntity;
 import com.devstudios.store.devstudios_store_server.infrastructure.CustomExceptions.CustomException;
 
 
@@ -28,10 +32,17 @@ public class ScriptService {
 
     IScriptRepository scriptRepository;
     IFilesService filesService;
+    IPaymentsService paymentsService;
+    IUserRepository userRepository;
+    IJwtService jwtService;
 
-    public ScriptService( IScriptRepository scriptRepository, IFilesService filesService ){
+    public ScriptService( IScriptRepository scriptRepository, IFilesService filesService, IPaymentsService paymentsService,
+        IUserRepository userRepository, IJwtService jwtService ){
         this.scriptRepository = scriptRepository;
         this.filesService = filesService;
+        this.paymentsService = paymentsService;
+        this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
 
 
@@ -100,6 +111,7 @@ public class ScriptService {
         );
     }
 
+
     public ResponseDto<IScriptProjection> findById(Long id){
         IScriptProjection script = scriptRepository.findOneById(id)
             .orElseThrow( () -> CustomException.notFoundException("Script not found"));
@@ -107,5 +119,23 @@ public class ScriptService {
         return new ResponseDto<>(null, 200, script);
     }
 
+
+    public ResponseDto<String> buyScript( Long id, String email ){
+        ScriptEntity script = scriptRepository.findById(id)
+            .orElseThrow( () -> CustomException.notFoundException("Script not found"));
+
+        // obtenemos la informacion del usuario que envio el ticket de compra
+        UserEntity user = userRepository.findById(id)
+            .orElseThrow( () -> CustomException.notFoundException("Unexpected error, try again later"));
+
+        // creamos un nuevo token
+        String token = jwtService.createJwt(user.getRoles(), user.getEmail());
+
+        // creamos la orden de compra
+        String url = paymentsService.createOrder(script.getName(), email, script.getDescription(), script.getPrice(), 1L, script.getImage());
+
+        // mandamos la informacion
+        return new ResponseDto<>(token, 200, url);
+    }
 
 }
