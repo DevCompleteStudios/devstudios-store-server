@@ -125,7 +125,7 @@ public class ScriptService {
             .orElseThrow( () -> CustomException.notFoundException("Script not found"));
 
         // obtenemos la informacion del usuario que envio el ticket de compra
-        UserEntity user = userRepository.findById(id)
+        UserEntity user = userRepository.findByEmail(email)
             .orElseThrow( () -> CustomException.notFoundException("Unexpected error, try again later"));
 
         // creamos un nuevo token

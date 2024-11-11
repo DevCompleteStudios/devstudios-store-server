@@ -19,7 +19,7 @@ public class PaymentsServiceImpl implements IPaymentsService {
     @Value("${stripe.api.key}")
     private String stripeApiKey;
 
-    private final String CLIENT_URL = "http://localhost:4242/home";
+    private final String CLIENT_URL = "http://localhost:4200/home";
 
 
     @PostConstruct
