@@ -1,12 +1,11 @@
 package com.devstudios.store.devstudios_store_server.application.interfaces.services;
 
-
-
-
+import com.devstudios.store.devstudios_store_server.application.interfaces.enums.TypePayment;
 
 public interface IPaymentsService {
 
-    public String createOrder(String name, String customerEmail, String description, Double price, Long quantity, String image);
+    public String createOrder(String name, String customerEmail, String description, Double price, Long quantity, String image, String orderId, TypePayment typePayment);
+    public void paymentsHook(String payload, String sigHeader);
 
 }
 

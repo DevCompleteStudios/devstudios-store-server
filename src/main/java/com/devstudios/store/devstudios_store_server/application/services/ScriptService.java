@@ -12,6 +12,7 @@ import com.devstudios.store.devstudios_store_server.application.dtos.script.Upda
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.PaginationDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.ResponseDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.ResponsePaginationDto;
+import com.devstudios.store.devstudios_store_server.application.interfaces.enums.TypePayment;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IScriptPreviewProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IScriptProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptRepository;
@@ -124,17 +125,12 @@ public class ScriptService {
         ScriptEntity script = scriptRepository.findById(id)
             .orElseThrow( () -> CustomException.notFoundException("Script not found"));
 
-        // obtenemos la informacion del usuario que envio el ticket de compra
         UserEntity user = userRepository.findByEmail(email)
             .orElseThrow( () -> CustomException.notFoundException("Unexpected error, try again later"));
 
-        // creamos un nuevo token
         String token = jwtService.createJwt(user.getRoles(), user.getEmail());
+        String url = paymentsService.createOrder(script.getName(), email, script.getDescription(), script.getPrice(), 1L, script.getImage(), script.getId().toString(), TypePayment.ONE_PAYMENT);
 
-        // creamos la orden de compra
-        String url = paymentsService.createOrder(script.getName(), email, script.getDescription(), script.getPrice(), 1L, script.getImage());
-
-        // mandamos la informacion
         return new ResponseDto<>(token, 200, url);
     }
 
