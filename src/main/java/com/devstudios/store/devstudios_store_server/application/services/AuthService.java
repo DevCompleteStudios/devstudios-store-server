@@ -48,7 +48,7 @@ public class AuthService {
 
 
 
-    public ResponseDto<IUserProjection> registerUser(AuthDto authDto){
+    public ResponseDto<String> registerUser(AuthDto authDto){
         UserEntity user = new UserEntity();
 
         String token = jwtService.createJwt(user.getRoles(), authDto.getEmail());
@@ -57,14 +57,13 @@ public class AuthService {
         user.setEmail(authDto.getEmail());
         user.setPassword(passwordHash);
 
-        UserEntity userDb = userRepository.save(user);
-        IUserProjection userProjection = mapper.userEntityToProjection(userDb);
+        userRepository.save(user);
 
-        return new ResponseDto<>(token, 201, userProjection);
+        return new ResponseDto<>(token, 201, user.getEmail());
     }
 
 
-    public ResponseDto<IUserProjection> loginUser( AuthDto authDto ){
+    public ResponseDto<String> loginUser( AuthDto authDto ){
         UserEntity user = userRepository.findByEmail(authDto.getEmail())
             .orElseThrow( () -> CustomException.notFoundException("Account not exist"));
 
@@ -73,10 +72,9 @@ public class AuthService {
         if( !bcrypt.comparePassword(authDto.getPassword(), user.getPassword()) )
             throw CustomException.badRequestException("Email or password is not valid");
 
-        IUserProjection userProjection = mapper.userEntityToProjection(user);
         String token = jwtService.createJwt(user.getRoles(), authDto.getEmail());
 
-        return new ResponseDto<>(token, 200, userProjection);
+        return new ResponseDto<>(token, 200, authDto.getEmail());
     }
 
 
@@ -116,14 +114,15 @@ public class AuthService {
     }
 
 
-    public ResponseDto<String> verifyToken(){
+    public ResponseDto<IUserProjection> verifyToken(){
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity user = userRepository.findByEmail(currentUser)
             .orElseThrow( () -> CustomException.badRequestException("token expired"));
 
         String token = this.jwtService.createJwt(user.getRoles(), user.getEmail());
+        IUserProjection userProjection = mapper.userEntityToProjection(user);
 
-        return new ResponseDto<>(token, 200, "Renewed token");
+        return new ResponseDto<>(token, 200, userProjection);
     }
 
 }
