@@ -42,8 +42,6 @@ public class HandlePaymentsService {
 
             user.getScriptsPurchases().add(purchase);
             userRepository.save(user);
-
-            System.out.println("Se finalizo la compra");
         } catch (Exception e) {
             throw CustomException.internalServerException("Un usuario compro y no recibio su pago. Email del usuario: " + user.getEmail() + " fecha: " + LocalDateTime.now());
         }

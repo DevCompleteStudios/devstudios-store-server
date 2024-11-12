@@ -13,7 +13,7 @@ public interface IScriptProjection extends IProjection {
     public String getDescription();
     public Double getPrice();
     public ScriptMethodPayment getMethodPayment();
-    public List<IRatingProjection> getRatings();
+    public List<IRatingPreviewProjection> getRatings();
     public List<IScriptPurchasePreviewProjection> getPurchases();
     public String getYoutubeLink();
     public String getImage();

@@ -32,7 +32,7 @@ public class PaymentsServiceStripeImpl implements IPaymentsService {
     @Value("${stripe.webhook}")
     private String stripeWebhook;
 
-    private final String CLIENT_URL = "http://localhost:4200/home";
+    private final String CLIENT_URL = "http://localhost:4200";
 
 
     @PostConstruct
@@ -45,7 +45,7 @@ public class PaymentsServiceStripeImpl implements IPaymentsService {
     public String createOrder(String name, String customerEmail, String description, Double price, Long quantity, String image, String orderId, TypePayment typePayment) {
         SessionCreateParams params = SessionCreateParams.builder()
             .setMode(SessionCreateParams.Mode.PAYMENT)
-            .setSuccessUrl(CLIENT_URL)
+            .setSuccessUrl(CLIENT_URL + "/payment-succes")
             .setCancelUrl(CLIENT_URL)
             .setCustomerEmail(customerEmail)
             .addLineItem(
