@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.ResponseDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.subscription.CreateSubscriptionDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.subscription.EditSubscriptionDto;
+import com.devstudios.store.devstudios_store_server.application.interfaces.enums.TypePayment;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.ISubscriptionPreviewProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.ISubscriptionRepository;
+import com.devstudios.store.devstudios_store_server.application.interfaces.services.IPaymentsService;
 import com.devstudios.store.devstudios_store_server.domain.entities.SubscriptionEntity;
 import com.devstudios.store.devstudios_store_server.domain.mappers.AutoMapper;
 import com.devstudios.store.devstudios_store_server.infrastructure.CustomExceptions.CustomException;
@@ -24,6 +26,8 @@ public class SubscriptionsService {
     ISubscriptionRepository repository;
     @Autowired
     AutoMapper mapper;
+    @Autowired
+    IPaymentsService paymentsService;
 
 
 
@@ -68,6 +72,17 @@ public class SubscriptionsService {
         repository.save(entity);
 
         return new ResponseDto<>(null, 200, true);
+    }
+
+    public ResponseDto<String> buy( Long id, String email ){
+        SubscriptionEntity sub = repository.findById(id)
+            .orElseThrow( () -> CustomException.notFoundException("Subscription not found"));
+        if( !sub.getIsActive() ){
+            throw CustomException.notFoundException("Subscription not found");
+        }
+
+        String url = paymentsService.createOrder(sub.getName(), email, sub.getDescription(), sub.getPrice(), 1L, id.toString(), TypePayment.SUBSCRIPTION);
+        return new ResponseDto<>(null, 200, url);
     }
 
 }

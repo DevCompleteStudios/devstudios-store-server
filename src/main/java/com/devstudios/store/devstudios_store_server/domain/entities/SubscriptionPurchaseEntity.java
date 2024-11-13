@@ -3,6 +3,7 @@ package com.devstudios.store.devstudios_store_server.domain.entities;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -20,7 +21,7 @@ public class SubscriptionPurchaseEntity extends EntityBase {
     private LocalDateTime dateAvailableForNewUser;
     private final String uuid = UUID.randomUUID().toString();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="key_id")
     private KeyEntity key;
 

@@ -29,7 +29,7 @@ public class UserEntity extends EntityBase {
     @ManyToMany(cascade=CascadeType.PERSIST)
     private List<RoleEntity> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade=CascadeType.PERSIST)
+    @OneToMany(mappedBy = "user", cascade=CascadeType.MERGE)
     private List<SubscriptionPurchaseEntity> subscriptionsPurchases = new ArrayList<>();
 
     @OneToMany(mappedBy="user", cascade=CascadeType.MERGE)

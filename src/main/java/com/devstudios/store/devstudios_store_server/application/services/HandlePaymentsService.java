@@ -8,11 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.devstudios.store.devstudios_store_server.application.interfaces.enums.TypePayment;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptRepository;
+import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.ISubscriptionRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IUserRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.services.IMailerService;
 import com.devstudios.store.devstudios_store_server.domain.entities.KeyEntity;
 import com.devstudios.store.devstudios_store_server.domain.entities.ScriptEntity;
 import com.devstudios.store.devstudios_store_server.domain.entities.ScriptPurchaseEntity;
+import com.devstudios.store.devstudios_store_server.domain.entities.SubscriptionEntity;
+import com.devstudios.store.devstudios_store_server.domain.entities.SubscriptionPurchaseEntity;
 import com.devstudios.store.devstudios_store_server.domain.entities.UserEntity;
 import com.devstudios.store.devstudios_store_server.infrastructure.CustomExceptions.CustomException;
 
@@ -25,6 +28,8 @@ public class HandlePaymentsService {
     IScriptRepository scriptRepository;
     @Autowired
     IMailerService mailerService;
+    @Autowired
+    ISubscriptionRepository subscriptionRepository;
 
 
 
@@ -44,11 +49,34 @@ public class HandlePaymentsService {
             user.getScriptsPurchases().add(purchase);
             userRepository.save(user);
         } catch (Exception e) {
-            throw CustomException.internalServerException("Un usuario compro y no recibio su pago. Email del usuario: " + user.getEmail() + " fecha: " + LocalDateTime.now());
+            notifyError(user.getEmail());
         }
     }
 
-    private void BuySubscription( UserEntity user, Long id ){}
+    private void BuySubscription( UserEntity user, Long id ){
+        try {
+            SubscriptionEntity sub = subscriptionRepository.findById(id)
+                .orElseThrow( () -> CustomException.notFoundException("Subscription not found"));
+
+            SubscriptionPurchaseEntity purchase = new SubscriptionPurchaseEntity();
+            purchase.setSubscription(sub);
+            purchase.setUser(user);
+            purchase.setAmount(sub.getPrice());
+
+            KeyEntity key = new KeyEntity();
+            purchase.setKey(key);
+
+            user.getSubscriptionPurchases().add(purchase);
+            userRepository.save(user);
+        } catch (Exception e) {
+            notifyError(user.getEmail());
+        }
+    }
+
+
+    private void notifyError(String email){
+        throw CustomException.internalServerException("Un usuario compro y no recibio su pago. Email del usuario: " + email + " fecha: " + LocalDateTime.now());
+    }
 
 
 
@@ -58,10 +86,8 @@ public class HandlePaymentsService {
         if( user.isPresent() ){
             Long id = Long.parseLong(orderId);
             if( TypePayment.ONE_PAYMENT.name().equals(type) ){
-                System.out.println("Se hizo una compra por 1 solo pago");
                 this.BuyScript(user.get(), id);
             } else {
-                System.out.println("se hizo una compra por suscripcion");
                 this.BuySubscription(user.get(), id);
             }
         }

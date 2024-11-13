@@ -3,6 +3,7 @@ package com.devstudios.store.devstudios_store_server.presentation.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import com.devstudios.store.devstudios_store_server.application.dtos.subscriptio
 import com.devstudios.store.devstudios_store_server.application.services.SubscriptionsService;
 
 import jakarta.validation.Valid;
+
 
 
 
@@ -56,5 +58,13 @@ public class SubscriptionsController {
         var res = service.delete(id);
         return ResponseEntity.status(res.getStatus()).body(res);
     }
+
+    @GetMapping("/buy/{id}")
+    public ResponseEntity<?> buy( @PathVariable Long id ) {
+        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+        var res = service.buy(id, currentUser);
+        return ResponseEntity.status(res.getStatus()).body(res);
+    }
+
 
 }

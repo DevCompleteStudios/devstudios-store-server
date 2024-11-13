@@ -32,12 +32,23 @@ public class PaymentsServiceStripeImpl implements IPaymentsService {
     @Value("${stripe.webhook}")
     private String stripeWebhook;
 
+    @Value("${image.default.logo}")
+    private String imageDefault;
+
     private final String CLIENT_URL = "http://localhost:4200";
 
 
     @PostConstruct
     public void init() {
         Stripe.apiKey = stripeApiKey;
+    }
+
+
+
+
+    @Override
+    public String createOrder(String name, String customerEmail, String description, Double price, Long quantity, String orderId, TypePayment typePayment) {
+        return this.createOrder(name, customerEmail, description, price, quantity, imageDefault, orderId, typePayment);
     }
 
 
@@ -121,7 +132,6 @@ public class PaymentsServiceStripeImpl implements IPaymentsService {
                 break;
         }
     }
-
 
 
 
