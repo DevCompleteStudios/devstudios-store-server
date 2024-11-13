@@ -21,6 +21,8 @@ public class ScriptEntity extends EntityBase {
 
     @Column(unique=true)
     private String name;
+
+    @Column(length = 500)
     private String description;
     private Double price;
 

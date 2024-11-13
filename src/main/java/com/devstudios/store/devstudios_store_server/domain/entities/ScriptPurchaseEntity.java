@@ -32,6 +32,8 @@ public class ScriptPurchaseEntity extends EntityBase {
     @OneToOne(mappedBy = "purchase", cascade = CascadeType.PERSIST)
     private RatingEntity rating;
 
+    private Double amount;
+
 
 
     public String getUuid() {
@@ -60,6 +62,12 @@ public class ScriptPurchaseEntity extends EntityBase {
     }
     public void setRating(RatingEntity rating) {
         this.rating = rating;
+    }
+    public Double getAmount() {
+        return amount;
+    }
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
 }

@@ -36,6 +36,7 @@ public class HandlePaymentsService {
             ScriptPurchaseEntity purchase = new ScriptPurchaseEntity();
             purchase.setScript(script);
             purchase.setUser(user);
+            purchase.setAmount(script.getPrice());
 
             KeyEntity key = new KeyEntity();
             purchase.setKey(key);

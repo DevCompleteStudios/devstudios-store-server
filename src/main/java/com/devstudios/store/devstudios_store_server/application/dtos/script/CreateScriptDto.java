@@ -23,7 +23,7 @@ public class CreateScriptDto {
     @NotBlank
     private String name;
 
-    @Size(min = 10, max = 250)
+    @Size(min = 10, max = 500)
     @NotNull
     @NotBlank
     private String description;
