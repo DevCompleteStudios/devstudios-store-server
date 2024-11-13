@@ -9,5 +9,6 @@ public interface IScriptPurchaseProjection {
     public IKeyProjection getKey();
     public IScriptPreviewProjection getScript();
     public Double getAmount();
+    public Boolean getIsActive();
 
 }

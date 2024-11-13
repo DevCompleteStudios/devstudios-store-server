@@ -12,6 +12,7 @@ public class ScriptPurchaseDto implements IScriptPurchaseProjection {
     private IKeyProjection key;
     private IScriptPreviewProjection script;
     private Double amount;
+    private Boolean isActive;
 
 
     public ScriptPurchaseDto(){}
@@ -52,6 +53,12 @@ public class ScriptPurchaseDto implements IScriptPurchaseProjection {
     }
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+    public Boolean getIsActive() {
+        return isActive;
+    }
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 
 }

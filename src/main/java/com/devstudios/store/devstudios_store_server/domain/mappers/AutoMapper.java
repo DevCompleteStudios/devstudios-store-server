@@ -78,6 +78,7 @@ public class AutoMapper {
         );
         dto.setUuid(entity.getUuid());
         dto.setAmount(entity.getAmount());
+        dto.setIsActive(entity.getIsActive());
 
         return dto;
     }

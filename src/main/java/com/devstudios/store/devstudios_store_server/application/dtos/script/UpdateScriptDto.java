@@ -18,7 +18,7 @@ public class UpdateScriptDto {
     @Size(min = 4, max = 70)
     private String name;
 
-    @Size(min = 10, max = 250)
+    @Size(min = 10, max = 500)
     private String description;
 
     @Min(value = 1)
