@@ -77,6 +77,7 @@ public class AutoMapper {
             scriptToProjectionPreview(entity.getScript())
         );
         dto.setUuid(entity.getUuid());
+        dto.setAmount(entity.getAmount());
 
         return dto;
     }
@@ -94,8 +95,9 @@ public class AutoMapper {
             keyEntityToProjection(entity.getKey())
         );
         dto.setSubscription(
-            suscriptionEntityToProjectionPreview(entity.getSubscription())
+            subscriptionEntityToProjectionPreview(entity.getSubscription())
         );
+        dto.setAmount(entity.getAmount());
 
         dto.setUpdatedAt(entity.getUpdatedAt());
         dto.setUuid(entity.getUuid());
@@ -103,7 +105,7 @@ public class AutoMapper {
         return dto;
     }
 
-    ISubscriptionPreviewProjection suscriptionEntityToProjectionPreview( SubscriptionEntity entity ){
+    public ISubscriptionPreviewProjection subscriptionEntityToProjectionPreview( SubscriptionEntity entity ){
         if( entity == null ) return null;
         SubscriptionPreviewDto dto = new SubscriptionPreviewDto();
 

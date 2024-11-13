@@ -12,5 +12,6 @@ public interface ISubscriptionPurchaseProjection extends IProjection {
     public String getUuid();
     public IKeyProjection getKey();
     public ISubscriptionPreviewProjection getSubscription();
+    public Double getAmount();
 
 }

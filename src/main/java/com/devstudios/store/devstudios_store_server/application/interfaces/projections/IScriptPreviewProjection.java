@@ -14,4 +14,5 @@ public interface IScriptPreviewProjection  {
     public Boolean getIsActive();
     public String getImage();
 
+
 }

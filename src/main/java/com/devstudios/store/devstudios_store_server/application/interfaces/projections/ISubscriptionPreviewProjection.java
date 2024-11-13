@@ -2,8 +2,6 @@ package com.devstudios.store.devstudios_store_server.application.interfaces.proj
 
 
 
-
-
 public interface ISubscriptionPreviewProjection {
 
     public Long getId();

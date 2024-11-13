@@ -32,6 +32,8 @@ public class SubscriptionPurchaseEntity extends EntityBase {
     @JoinColumn(name="user_id")
     private UserEntity user;
 
+    private Double amount;
+
 
     @PrePersist
     public void PrePersist(){
@@ -71,6 +73,12 @@ public class SubscriptionPurchaseEntity extends EntityBase {
     }
     public void setKey(KeyEntity key) {
         this.key = key;
+    }
+    public Double getAmount() {
+        return amount;
+    }
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
 }

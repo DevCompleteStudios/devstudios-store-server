@@ -8,5 +8,6 @@ public interface IScriptPurchaseProjection {
     public String getUuid();
     public IKeyProjection getKey();
     public IScriptPreviewProjection getScript();
+    public Double getAmount();
 
 }

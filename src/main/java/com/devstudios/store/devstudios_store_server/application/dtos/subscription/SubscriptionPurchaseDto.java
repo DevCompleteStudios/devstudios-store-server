@@ -20,6 +20,8 @@ public class SubscriptionPurchaseDto implements ISubscriptionPurchaseProjection 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Boolean isActive;
+    private Double amount;
+
 
 
     public SubscriptionPurchaseDto(){}
@@ -102,6 +104,12 @@ public class SubscriptionPurchaseDto implements ISubscriptionPurchaseProjection 
     }
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
+    }
+    public Double getAmount() {
+        return amount;
+    }
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
 

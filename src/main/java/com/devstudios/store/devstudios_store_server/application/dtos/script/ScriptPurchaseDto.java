@@ -11,6 +11,7 @@ public class ScriptPurchaseDto implements IScriptPurchaseProjection {
     private String uuid;
     private IKeyProjection key;
     private IScriptPreviewProjection script;
+    private Double amount;
 
 
     public ScriptPurchaseDto(){}
@@ -44,6 +45,13 @@ public class ScriptPurchaseDto implements IScriptPurchaseProjection {
     }
     public void setScript(IScriptPreviewProjection script) {
         this.script = script;
+    }
+    @Override
+    public Double getAmount() {
+        return amount;
+    }
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
 }
