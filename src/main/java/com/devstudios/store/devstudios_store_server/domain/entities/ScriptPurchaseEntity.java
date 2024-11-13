@@ -29,6 +29,9 @@ public class ScriptPurchaseEntity extends EntityBase {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @OneToOne(mappedBy = "purchase", cascade = CascadeType.PERSIST)
+    private RatingEntity rating;
+
 
 
     public String getUuid() {
@@ -51,6 +54,12 @@ public class ScriptPurchaseEntity extends EntityBase {
     }
     public void setKey(KeyEntity key) {
         this.key = key;
+    }
+    public RatingEntity getRating() {
+        return rating;
+    }
+    public void setRating(RatingEntity rating) {
+        this.rating = rating;
     }
 
 }

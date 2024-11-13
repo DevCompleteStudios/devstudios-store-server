@@ -43,7 +43,7 @@ public class SecurityConfig {
                     "/images/**",
                     "/api/scripts/find-by-id/{id}",
                     "/webhook",
-                    "api/scripts/find-coments-by-script-id/{id}"
+                    "api/rating/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

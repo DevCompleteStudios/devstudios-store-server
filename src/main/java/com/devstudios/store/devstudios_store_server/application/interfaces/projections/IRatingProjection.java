@@ -6,6 +6,5 @@ public interface IRatingProjection extends IProjection {
 
     public int getStars();
     public String getContent();
-    public IUserPreviewProjection getUser();
 
 }

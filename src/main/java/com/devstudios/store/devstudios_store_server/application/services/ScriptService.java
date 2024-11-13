@@ -7,14 +7,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.devstudios.store.devstudios_store_server.application.dtos.rating.AddRatingDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.script.CreateScriptDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.script.UpdateScriptDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.PaginationDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.ResponseDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.ResponsePaginationDto;
 import com.devstudios.store.devstudios_store_server.application.interfaces.enums.TypePayment;
-import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IRatingProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IScriptPreviewProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IScriptProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptRepository;
@@ -134,16 +132,6 @@ public class ScriptService {
         String url = paymentsService.createOrder(script.getName(), email, script.getDescription(), script.getPrice(), 1L, script.getImage(), script.getId().toString(), TypePayment.ONE_PAYMENT);
 
         return new ResponseDto<>(token, 200, url);
-    }
-
-
-    public ResponsePaginationDto<IRatingProjection> findRatingByScriptId( Long id, PaginationDto paginationDto ){
-        return null;
-    }
-
-
-    public ResponseDto<IRatingProjection> addRating( Long id, AddRatingDto addRatingDto ){
-        return null;
     }
 
 }

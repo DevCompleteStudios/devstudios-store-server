@@ -1,6 +1,8 @@
 package com.devstudios.store.devstudios_store_server.domain.entities;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -13,12 +15,13 @@ public class RatingEntity extends EntityBase {
     private int stars;
     private String content;
 
-    @ManyToOne
-    private UserEntity user;
-
     @OneToOne
+    @JoinColumn(name = "script_purchase_id")
     private ScriptPurchaseEntity purchase;
 
+    @ManyToOne
+    @JoinTable(name = "script_id")
+    private ScriptEntity script;
 
 
     public int getStars() {
@@ -33,17 +36,17 @@ public class RatingEntity extends EntityBase {
     public void setContent(String content) {
         this.content = content;
     }
-    public UserEntity getUser() {
-        return user;
-    }
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
     public ScriptPurchaseEntity getPurchase() {
         return purchase;
     }
     public void setPurchase(ScriptPurchaseEntity purchase) {
         this.purchase = purchase;
+    }
+    public ScriptEntity getScript() {
+        return script;
+    }
+    public void setScript(ScriptEntity script) {
+        this.script = script;
     }
 
 

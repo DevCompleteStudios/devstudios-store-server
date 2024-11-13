@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.devstudios.store.devstudios_store_server.application.dtos.rating.AddRatingDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.script.CreateScriptDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.script.UpdateScriptDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.PaginationDto;
@@ -66,16 +65,5 @@ public class ScriptController {
         var res = service.buyScript(id, currentUser);
         return ResponseEntity.status(res.getStatus()).body(res);
     }
-
-    @GetMapping("/find-coments-by-script-id/{id}")
-    public ResponseEntity<?> findComentsByScriptId( @PathVariable Long id, @Valid @ModelAttribute PaginationDto paginationDto ) {
-        return null;
-    }
-
-    @PostMapping("/add-rating/{id}")
-    public ResponseEntity<?> addRating( @PathVariable Long id, @Valid AddRatingDto addRatingDto ){
-        return null;
-    }
-
 
 }
