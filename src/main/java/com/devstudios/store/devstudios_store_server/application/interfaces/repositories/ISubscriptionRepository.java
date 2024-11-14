@@ -3,13 +3,13 @@ package com.devstudios.store.devstudios_store_server.application.interfaces.repo
 import java.util.List;
 import java.util.Optional;
 
-import com.devstudios.store.devstudios_store_server.application.interfaces.projections.ISubscriptionPreviewProjection;
+import com.devstudios.store.devstudios_store_server.application.interfaces.projections.ISubscriptionProjection;
 import com.devstudios.store.devstudios_store_server.domain.entities.SubscriptionEntity;
 
 
 
 public interface ISubscriptionRepository {
     public SubscriptionEntity save(SubscriptionEntity subscriptionEntity);
-    public List<ISubscriptionPreviewProjection> findAllSubscriptions();
+    public List<ISubscriptionProjection> findAllSubscriptions();
     public Optional<SubscriptionEntity> findById( Long id );
 }

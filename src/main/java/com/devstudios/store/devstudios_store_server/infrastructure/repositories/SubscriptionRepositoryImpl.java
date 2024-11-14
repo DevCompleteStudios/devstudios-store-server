@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.devstudios.store.devstudios_store_server.application.interfaces.projections.ISubscriptionPreviewProjection;
+import com.devstudios.store.devstudios_store_server.application.interfaces.projections.ISubscriptionProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.ISubscriptionRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.ISubscriptionRepositoryJpa;
 import com.devstudios.store.devstudios_store_server.domain.entities.SubscriptionEntity;
@@ -27,7 +27,7 @@ public class SubscriptionRepositoryImpl implements ISubscriptionRepository {
     }
 
     @Override
-    public List<ISubscriptionPreviewProjection> findAllSubscriptions() {
+    public List<ISubscriptionProjection> findAllSubscriptions() {
         return repositoryJpa.findAllSubscriptions();
     }
 

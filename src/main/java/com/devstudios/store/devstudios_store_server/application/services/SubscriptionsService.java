@@ -9,7 +9,7 @@ import com.devstudios.store.devstudios_store_server.application.dtos.shared.Resp
 import com.devstudios.store.devstudios_store_server.application.dtos.subscription.CreateSubscriptionDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.subscription.EditSubscriptionDto;
 import com.devstudios.store.devstudios_store_server.application.interfaces.enums.TypePayment;
-import com.devstudios.store.devstudios_store_server.application.interfaces.projections.ISubscriptionPreviewProjection;
+import com.devstudios.store.devstudios_store_server.application.interfaces.projections.ISubscriptionProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.ISubscriptionRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.services.IPaymentsService;
 import com.devstudios.store.devstudios_store_server.domain.entities.SubscriptionEntity;
@@ -31,8 +31,8 @@ public class SubscriptionsService {
 
 
 
-    public ResponseDto<List<ISubscriptionPreviewProjection>> findAll(){
-        List<ISubscriptionPreviewProjection> allElements = repository.findAllSubscriptions();
+    public ResponseDto<List<ISubscriptionProjection>> findAll(){
+        List<ISubscriptionProjection> allElements = repository.findAllSubscriptions();
         return new ResponseDto<>(null, 200, allElements);
     }
 
