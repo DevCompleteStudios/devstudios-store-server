@@ -1,6 +1,7 @@
 package com.devstudios.store.devstudios_store_server.application.services;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,7 +36,7 @@ public class RatingService {
         ScriptPurchaseEntity scriptPurchaseEntity = scriptPurchaseRepository.findByUuid(addRatingDto.getOrderId())
             .orElseThrow( () -> CustomException.badRequestException("Order id is not valod"));
 
-        if( scriptPurchaseEntity.getScript().getId() != scriptId ){
+        if( !Objects.equals(scriptPurchaseEntity.getScript().getId(), scriptId) ){
             throw CustomException.badRequestException("This purchase order is not valid for this");
         }else if(scriptPurchaseEntity.getRating() != null){
             throw CustomException.badRequestException("A comment has already been registered with this purchase");
@@ -58,7 +59,7 @@ public class RatingService {
         Pageable page = PageRequest.of(paginationDto.getPage(), paginationDto.getElements());
         Page<IRatingProjection> elements = repository.findRatingByScriptId(scriptId, page);
 
-        return new ResponsePaginationDto<List<IRatingProjection>>(elements.getTotalPages(), elements.getTotalElements(), null, 200, elements.getContent());
+        return new ResponsePaginationDto<>(elements.getTotalPages(), elements.getTotalElements(), null, 200, elements.getContent());
     }
 
 
