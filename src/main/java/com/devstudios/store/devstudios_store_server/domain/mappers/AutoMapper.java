@@ -5,18 +5,21 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.devstudios.store.devstudios_store_server.application.dtos.key.KeyDto;
+import com.devstudios.store.devstudios_store_server.application.dtos.rating.RatingDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.script.ScriptPreviewDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.script.ScriptPurchaseDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.subscription.SubscriptionPreviewDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.subscription.SubscriptionPurchaseDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.user.UserDto;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IKeyProjection;
+import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IRatingProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IScriptPreviewProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IScriptPurchaseProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.ISubscriptionPreviewProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.ISubscriptionPurchaseProjection;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IUserProjection;
 import com.devstudios.store.devstudios_store_server.domain.entities.KeyEntity;
+import com.devstudios.store.devstudios_store_server.domain.entities.RatingEntity;
 import com.devstudios.store.devstudios_store_server.domain.entities.ScriptEntity;
 import com.devstudios.store.devstudios_store_server.domain.entities.ScriptPurchaseEntity;
 import com.devstudios.store.devstudios_store_server.domain.entities.SubscriptionEntity;
@@ -127,6 +130,20 @@ public class AutoMapper {
         key.setId(keyEntity.getId());
 
         return key;
+    }
+
+    public IRatingProjection ratingEntityToProjection( RatingEntity entity ){
+        if( entity == null ) return null;
+        RatingDto rating = new RatingDto();
+
+        rating.setContent(entity.getContent());
+        rating.setCreatedAt(entity.getCreatedAt());
+        rating.setId(entity.getId());
+        rating.setIsActive(entity.getIsActive());
+        rating.setStars(entity.getStars());
+        rating.setUpdatedAt(entity.getUpdatedAt());
+
+        return rating;
     }
 
 }

@@ -6,7 +6,6 @@ target/
 
 postgres/
 mongodb/
-envs-dev.properties
 .env
 
 

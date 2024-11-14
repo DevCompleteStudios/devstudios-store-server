@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.devstudios.store.devstudios_store_server.application.dtos.rating.AddRatingDto;
@@ -18,6 +19,7 @@ import com.devstudios.store.devstudios_store_server.application.interfaces.repos
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptPurchaseRepository;
 import com.devstudios.store.devstudios_store_server.domain.entities.RatingEntity;
 import com.devstudios.store.devstudios_store_server.domain.entities.ScriptPurchaseEntity;
+import com.devstudios.store.devstudios_store_server.domain.mappers.AutoMapper;
 import com.devstudios.store.devstudios_store_server.infrastructure.CustomExceptions.CustomException;
 
 
@@ -29,10 +31,12 @@ public class RatingService {
     IRatingRepository repository;
     @Autowired
     IScriptPurchaseRepository scriptPurchaseRepository;
+    @Autowired
+    AutoMapper mapper;
 
 
 
-    public ResponseDto<Boolean> addComent( Long scriptId, AddRatingDto addRatingDto ){
+    public ResponseDto<IRatingProjection> addComent( Long scriptId, AddRatingDto addRatingDto ){
         ScriptPurchaseEntity scriptPurchaseEntity = scriptPurchaseRepository.findByUuid(addRatingDto.getOrderId())
             .orElseThrow( () -> CustomException.badRequestException("Order id is not valod"));
 
@@ -52,11 +56,11 @@ public class RatingService {
         scriptPurchaseEntity.setRating(rating);
         scriptPurchaseRepository.save(scriptPurchaseEntity);
 
-        return new ResponseDto<>(null, 201, true);
+        return new ResponseDto<>(null, 201, mapper.ratingEntityToProjection(rating));
     }
 
     public ResponsePaginationDto<List<IRatingProjection>> getAllComentsByScriptId( Long scriptId, PaginationDto paginationDto ){
-        Pageable page = PageRequest.of(paginationDto.getPage(), paginationDto.getElements());
+        Pageable page = PageRequest.of(paginationDto.getPage(), paginationDto.getElements(), Sort.by(Sort.Direction.DESC, "id"));
         Page<IRatingProjection> elements = repository.findRatingByScriptId(scriptId, page);
 
         return new ResponsePaginationDto<>(elements.getTotalPages(), elements.getTotalElements(), null, 200, elements.getContent());
