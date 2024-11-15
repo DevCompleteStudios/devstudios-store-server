@@ -1,6 +1,7 @@
 package com.devstudios.store.devstudios_store_server.application.services;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -8,14 +9,22 @@ import org.springframework.stereotype.Service;
 import com.devstudios.store.devstudios_store_server.application.dtos.auth.AuthDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.auth.ForgotPasswordDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.auth.ResetPasswordDto;
+import com.devstudios.store.devstudios_store_server.application.dtos.auth.VerifyAccesScriptDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.ResponseDto;
+import com.devstudios.store.devstudios_store_server.application.interfaces.enums.ScriptMethodPayment;
 import com.devstudios.store.devstudios_store_server.application.interfaces.projections.IUserProjection;
+import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IKeyRepository;
+import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IUserRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.services.IBcryptService;
 import com.devstudios.store.devstudios_store_server.application.interfaces.services.IJwtService;
 import com.devstudios.store.devstudios_store_server.application.interfaces.services.IMailerService;
 import com.devstudios.store.devstudios_store_server.application.interfaces.services.IRandomService;
 import com.devstudios.store.devstudios_store_server.domain.entities.CodeAuthEntity;
+import com.devstudios.store.devstudios_store_server.domain.entities.KeyEntity;
+import com.devstudios.store.devstudios_store_server.domain.entities.ScriptEntity;
+import com.devstudios.store.devstudios_store_server.domain.entities.ScriptPurchaseEntity;
+import com.devstudios.store.devstudios_store_server.domain.entities.SubscriptionPurchaseEntity;
 import com.devstudios.store.devstudios_store_server.domain.entities.UserEntity;
 import com.devstudios.store.devstudios_store_server.domain.mappers.AutoMapper;
 import com.devstudios.store.devstudios_store_server.infrastructure.CustomExceptions.CustomException;
@@ -34,16 +43,20 @@ public class AuthService {
     private final AutoMapper mapper;
     private final IRandomService randomService;
     private final IMailerService mailerService;
+    private final IKeyRepository keyRepository;
+    private final IScriptRepository scriptRepository;
 
 
     public AuthService( IUserRepository userRepository, IJwtService jwtService, IBcryptService bcrypt, AutoMapper mapper, IRandomService randomService,
-        IMailerService mailerService){
+        IMailerService mailerService, IKeyRepository keyRepository, IScriptRepository scriptRepository){
         this.userRepository = userRepository;
         this.jwtService = jwtService;
         this.bcrypt = bcrypt;
         this.mapper = mapper;
         this.randomService = randomService;
         this.mailerService = mailerService;
+        this.keyRepository = keyRepository;
+        this.scriptRepository = scriptRepository;
     }
 
 
@@ -127,6 +140,53 @@ public class AuthService {
         IUserProjection userProjection = mapper.userEntityToProjection(user);
 
         return new ResponseDto<>(token, 200, userProjection);
+    }
+
+    public ResponseDto<Boolean> verifyAccesScript( Long scriptId, VerifyAccesScriptDto dto ){
+        KeyEntity key = keyRepository.findByValue(dto.getKey())
+            .orElseThrow( () -> CustomException.badRequestException("Key is not valid!"));
+        if( !key.getIsActive() ) throw CustomException.badRequestException("Key is not valid!");
+        if( key.getCurrentUserRobloxId() != null && !key.getCurrentUserRobloxId().equals(dto.getRobloxId()) )
+            throw CustomException.badRequestException("This user is not valif for this key");
+
+        key.setCurrentUserRobloxId(dto.getRobloxId());
+
+        ScriptEntity currentScript = scriptRepository.findById(scriptId)
+            .orElseThrow( () -> CustomException.notFoundException("Script not found"));
+        if( !currentScript.getIsActive() ) throw CustomException.notFoundException("Script not found");
+
+        if(key.getScriptPurchase() != null){
+            this.validateScriptPurchase(currentScript, key.getScriptPurchase());
+        } else if(key.getSubscriptionPurchase() != null) {
+            this.validateSubscriptionPurhcase(currentScript, key.getSubscriptionPurchase());
+        } else {
+            throw CustomException.badRequestException("Script not found");
+        }
+
+        keyRepository.save(key);
+        return new ResponseDto<>(null, 200, true);
+    }
+
+
+
+    private Boolean validateScriptPurchase(ScriptEntity currentScript, ScriptPurchaseEntity scriptPurchase){
+        if( !scriptPurchase.getIsActive() ) throw CustomException.notFoundException("Purchase is not valid, contact support");
+        if( !Objects.equals(currentScript.getId(), scriptPurchase.getScript().getId()))
+            throw CustomException.badRequestException("This purchase is not valid in this script!");
+
+        return true;
+    }
+    private Boolean validateSubscriptionPurhcase(ScriptEntity currentScript, SubscriptionPurchaseEntity subscriptionPurchaseEntity){
+        if( currentScript.getMethodPayment().equals(ScriptMethodPayment.ONE_PAYMENT) )
+            throw CustomException.badRequestException("This script is not available in subscription");
+
+        LocalDateTime currentDate = LocalDateTime.now();
+        if( subscriptionPurchaseEntity.getDateExpired().isBefore(currentDate) )
+            throw CustomException.badRequestException("Key expired!");
+        if( !subscriptionPurchaseEntity.getIsActive() )
+            throw CustomException.badRequestException("Key expired!");
+        
+        return true;
     }
 
 }
