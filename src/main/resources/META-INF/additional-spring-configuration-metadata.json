@@ -28,5 +28,10 @@
     "name": "youtube.url",
     "type": "java.lang.String",
     "description": "A description for 'youtube.url'"
+  },
+  {
+    "name": "cloudinary.url",
+    "type": "java.lang.String",
+    "description": "A description for 'cloudinary.url'"
   }
 ]}
