@@ -51,11 +51,15 @@ public class AuthService {
     public ResponseDto<String> registerUser(AuthDto authDto){
         UserEntity user = new UserEntity();
 
+        System.out.println("1");
         String token = jwtService.createJwt(user.getRoles(), authDto.getEmail());
+        System.out.println("2");
         String passwordHash = bcrypt.hashPassword(authDto.getPassword());
-
+        System.out.println("3");
         user.setEmail(authDto.getEmail());
+        System.out.println("4");
         user.setPassword(passwordHash);
+        System.out.println("5");
 
         userRepository.save(user);
 

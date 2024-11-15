@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,7 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import static com.devstudios.store.devstudios_store_server.config.EnvsConfig.getKeyJwt;
+import com.devstudios.store.devstudios_store_server.config.EnvsConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Claims;
@@ -30,6 +31,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @Service
 public class JwtValidationFilter extends OncePerRequestFilter {
 
+    @Autowired
+    EnvsConfig envsConfig;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -73,7 +76,7 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
     private Claims extractClaim( String token ){
         return Jwts.parser()
-            .verifyWith(getKeyJwt())
+            .verifyWith(envsConfig.getKeyJwt())
             .build()
             .parseSignedClaims(token)
             .getPayload();

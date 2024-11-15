@@ -4,13 +4,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.devstudios.store.devstudios_store_server.application.interfaces.services.IJwtService;
-import static com.devstudios.store.devstudios_store_server.config.EnvsConfig.getJwtExpirationDate;
-import static com.devstudios.store.devstudios_store_server.config.EnvsConfig.getKeyJwt;
+import com.devstudios.store.devstudios_store_server.config.EnvsConfig;
 import com.devstudios.store.devstudios_store_server.domain.entities.RoleEntity;
 
 import io.jsonwebtoken.Claims;
@@ -21,6 +21,9 @@ import io.jsonwebtoken.Jwts;
 @Service
 public class JwtServiceImpl implements IJwtService {
 
+    @Autowired
+    EnvsConfig envsConfig;
+
     @Override
     public String createJwt(List<RoleEntity> roles, String email) {
         Claims claims = Jwts.claims()
@@ -29,8 +32,8 @@ public class JwtServiceImpl implements IJwtService {
 
         String jwt = Jwts.builder()
             .subject(email)
-            .signWith(getKeyJwt())
-            .expiration(getJwtExpirationDate())
+            .signWith(envsConfig.getKeyJwt())
+            .expiration(envsConfig.getJwtExpirationDate())
             .claims(claims)
             .compact();
 

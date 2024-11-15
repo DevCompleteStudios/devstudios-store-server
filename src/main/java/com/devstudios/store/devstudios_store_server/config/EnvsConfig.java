@@ -8,26 +8,26 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.security.Keys;
 
 
 
-
-public abstract class EnvsConfig {
+@Component
+public class EnvsConfig {
 
     @Value("${jwt.key}")
-    private static String KEY_JWT;
+    private String keyJwt;
+
     private static final int MINUTES_EXPIRED_JWT = 60;
 
-
-    public static SecretKey getKeyJwt(){
-        return Keys.hmacShaKeyFor(Base64.getDecoder().decode(KEY_JWT));
+    public SecretKey getKeyJwt() {
+        return Keys.hmacShaKeyFor(Base64.getDecoder().decode(keyJwt));
     }
 
-    public static Date getJwtExpirationDate() {
+    public Date getJwtExpirationDate() {
         LocalDateTime expirationDateTime = LocalDateTime.now().plusMinutes(MINUTES_EXPIRED_JWT);
         return Date.from(expirationDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
-
 }
