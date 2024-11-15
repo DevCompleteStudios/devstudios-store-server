@@ -2,6 +2,7 @@ package com.devstudios.store.devstudios_store_server.presentation.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,7 +58,7 @@ public class AuthController {
         return ResponseEntity.status(res.getStatus()).body(res);
     }
 
-    
+    @CrossOrigin(origins = "*")
     @PostMapping("/verify-acces-script/{id}")
     public ResponseEntity<?> verifyAccesScript( @PathVariable Long id, @Valid @RequestBody VerifyAccesScriptDto dto ){
         var res  = service.verifyAccesScript(id, dto);
