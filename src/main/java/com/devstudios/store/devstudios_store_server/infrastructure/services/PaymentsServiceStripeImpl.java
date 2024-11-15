@@ -35,7 +35,8 @@ public class PaymentsServiceStripeImpl implements IPaymentsService {
     @Value("${image.default.logo}")
     private String imageDefault;
 
-    private final String CLIENT_URL = "http://localhost:4200";
+    @Value("${url.client}")
+    private String CLIENT_URL;
 
 
     @PostConstruct

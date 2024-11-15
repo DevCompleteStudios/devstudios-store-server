@@ -2,6 +2,7 @@ package com.devstudios.store.devstudios_store_server.config;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -25,6 +26,9 @@ import com.devstudios.store.devstudios_store_server.infrastructure.services.JwtV
     jsr250Enabled = true
 )
 public class SecurityConfig {
+
+    @Value("${url.client}")
+    private String url;
 
     private final JwtValidationFilter validationFilter;
 
@@ -58,7 +62,7 @@ public class SecurityConfig {
     @Bean
     UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedOrigins(Arrays.asList(url));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("*")); // Permite todos los encabezados
         configuration.setAllowCredentials(true); // Permite el envío de credenciales
