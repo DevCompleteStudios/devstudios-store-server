@@ -33,5 +33,10 @@
     "name": "cloudinary.url",
     "type": "java.lang.String",
     "description": "A description for 'cloudinary.url'"
+  },
+  {
+    "name": "jwt.key",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.key'"
   }
 ]}

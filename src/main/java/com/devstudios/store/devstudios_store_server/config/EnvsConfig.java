@@ -7,7 +7,8 @@ import java.util.Date;
 
 import javax.crypto.SecretKey;
 
-import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.beans.factory.annotation.Value;
+
 import io.jsonwebtoken.security.Keys;
 
 
@@ -15,7 +16,8 @@ import io.jsonwebtoken.security.Keys;
 
 public abstract class EnvsConfig {
 
-    private static final String KEY_JWT = Dotenv.load().get("JWT_KEY");
+    @Value("${jwt.key}")
+    private static String KEY_JWT;
     private static final int MINUTES_EXPIRED_JWT = 60;
 
 
