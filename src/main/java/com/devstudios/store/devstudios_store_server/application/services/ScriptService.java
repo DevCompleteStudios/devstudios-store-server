@@ -1,13 +1,17 @@
 package com.devstudios.store.devstudios_store_server.application.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.devstudios.store.devstudios_store_server.application.dtos.script.CreateScriptDto;
+import com.devstudios.store.devstudios_store_server.application.dtos.script.FreeAccesScriptDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.script.UpdateScriptDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.PaginationDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.ResponseDto;
@@ -18,6 +22,7 @@ import com.devstudios.store.devstudios_store_server.application.interfaces.proje
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IUserRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.services.IJwtService;
+import com.devstudios.store.devstudios_store_server.application.interfaces.services.IMailerService;
 import com.devstudios.store.devstudios_store_server.application.interfaces.services.IPaymentsService;
 import com.devstudios.store.devstudios_store_server.domain.entities.ScriptEntity;
 import com.devstudios.store.devstudios_store_server.domain.entities.UserEntity;
@@ -29,6 +34,9 @@ import com.devstudios.store.devstudios_store_server.infrastructure.CustomExcepti
 @Service
 public class ScriptService {
 
+    @Value("${owner.email}")
+    private String ownerEmail;
+
     private final String pathImages = "/images/services";
 
     IScriptRepository scriptRepository;
@@ -36,14 +44,19 @@ public class ScriptService {
     IPaymentsService paymentsService;
     IUserRepository userRepository;
     IJwtService jwtService;
+    IMailerService mailerService;
+    HandlePaymentsService handlePaymentsService;
+
 
     public ScriptService( IScriptRepository scriptRepository, IFilesService filesService, IPaymentsService paymentsService,
-        IUserRepository userRepository, IJwtService jwtService ){
+        IUserRepository userRepository, IJwtService jwtService, IMailerService mailerService, HandlePaymentsService handlePaymentsService ){
         this.scriptRepository = scriptRepository;
         this.filesService = filesService;
         this.paymentsService = paymentsService;
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.mailerService = mailerService;
+        this.handlePaymentsService = handlePaymentsService;
     }
 
 
@@ -129,9 +142,18 @@ public class ScriptService {
             .orElseThrow( () -> CustomException.notFoundException("Unexpected error, try again later"));
 
         String token = jwtService.createJwt(user.getRoles(), user.getEmail());
-        String url = paymentsService.createOrder(script.getName(), email, script.getDescription(), script.getPrice(), 1L, script.getImage(), script.getId().toString(), TypePayment.ONE_PAYMENT);
+        String url = paymentsService.createOrder(script.getName(), email, script.getDescription(), script.getPrice(), 1L, script.getImage(), script.getId(), TypePayment.ONE_PAYMENT);
 
         return new ResponseDto<>(token, 200, url);
     }
 
+
+    public ResponseDto<Boolean> freeAccesScript( Long scriptId, FreeAccesScriptDto dto ){
+        String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        String text = "El usuario: " + currentUser + " ha generado un script gratis a: " + dto.getEmail() + " fecha: " + LocalDateTime.now();
+        handlePaymentsService.HandlePayment(dto.getEmail(), scriptId, TypePayment.ONE_PAYMENT.name());
+        mailerService.sendEmail(text, ownerEmail, "Alguien genero un pago gratis!");
+        return new ResponseDto<>(null, 201, true);
+    }
 }

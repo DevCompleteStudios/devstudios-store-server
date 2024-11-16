@@ -81,7 +81,7 @@ public class SubscriptionsService {
             throw CustomException.notFoundException("Subscription not found");
         }
 
-        String url = paymentsService.createOrder(sub.getName(), email, sub.getDescription(), sub.getPrice(), 1L, id.toString(), TypePayment.SUBSCRIPTION);
+        String url = paymentsService.createOrder(sub.getName(), email, sub.getDescription(), sub.getPrice(), 1L, id, TypePayment.SUBSCRIPTION);
         return new ResponseDto<>(null, 200, url);
     }
 

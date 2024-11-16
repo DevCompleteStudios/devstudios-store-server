@@ -4,8 +4,8 @@ import com.devstudios.store.devstudios_store_server.application.interfaces.enums
 
 public interface IPaymentsService {
 
-    public String createOrder(String name, String customerEmail, String description, Double price, Long quantity, String image, String orderId, TypePayment typePayment);
-    public String createOrder(String name, String customerEmail, String description, Double price, Long quantity, String orderId, TypePayment typePayment);
+    public String createOrder(String name, String customerEmail, String description, Double price, Long quantity, String image, Long productId, TypePayment typePayment);
+    public String createOrder(String name, String customerEmail, String description, Double price, Long quantity, Long productId, TypePayment typePayment);
     public void paymentsHook(String payload, String sigHeader);
 
 }

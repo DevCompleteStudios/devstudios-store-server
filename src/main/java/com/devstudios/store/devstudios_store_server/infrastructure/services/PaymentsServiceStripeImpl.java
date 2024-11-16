@@ -48,13 +48,13 @@ public class PaymentsServiceStripeImpl implements IPaymentsService {
 
 
     @Override
-    public String createOrder(String name, String customerEmail, String description, Double price, Long quantity, String orderId, TypePayment typePayment) {
-        return this.createOrder(name, customerEmail, description, price, quantity, imageDefault, orderId, typePayment);
+    public String createOrder(String name, String customerEmail, String description, Double price, Long quantity, Long productId, TypePayment typePayment) {
+        return this.createOrder(name, customerEmail, description, price, quantity, imageDefault, productId, typePayment);
     }
 
 
     @Override
-    public String createOrder(String name, String customerEmail, String description, Double price, Long quantity, String image, String orderId, TypePayment typePayment) {
+    public String createOrder(String name, String customerEmail, String description, Double price, Long quantity, String image, Long productId, TypePayment typePayment) {
         SessionCreateParams params = SessionCreateParams.builder()
             .setMode(SessionCreateParams.Mode.PAYMENT)
             .setSuccessUrl(CLIENT_URL + "/payment-succes")
@@ -78,7 +78,7 @@ public class PaymentsServiceStripeImpl implements IPaymentsService {
                     )
                     .build()
             )
-            .putMetadata("orderId", orderId)
+            .putMetadata("orderId", productId.toString())
             .putMetadata("type", typePayment.name())
             .putMetadata("email", customerEmail)
             .build();
@@ -119,7 +119,7 @@ public class PaymentsServiceStripeImpl implements IPaymentsService {
                 Session paymentIntent = (Session) stripeObject;
 
                 String email = paymentIntent.getMetadata().get("email");
-                String orderId = paymentIntent.getMetadata().get("orderId");
+                Long orderId = Long.parseLong(paymentIntent.getMetadata().get("orderId"));
                 String type = paymentIntent.getMetadata().get("type");
 
                 if( email != null && orderId != null && type != null ){

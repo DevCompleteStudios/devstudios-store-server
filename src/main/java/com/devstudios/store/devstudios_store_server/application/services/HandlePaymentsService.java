@@ -31,13 +31,13 @@ public class HandlePaymentsService {
     private String ytLink;
 
     @Autowired
-    IUserRepository userRepository;
+    private IUserRepository userRepository;
     @Autowired
-    IScriptRepository scriptRepository;
+    private IScriptRepository scriptRepository;
     @Autowired
-    IMailerService mailerService;
+    private IMailerService mailerService;
     @Autowired
-    ISubscriptionRepository subscriptionRepository;
+    private ISubscriptionRepository subscriptionRepository;
 
 
 
@@ -152,11 +152,10 @@ public class HandlePaymentsService {
     }
 
 
-    public void HandlePayment(String email, String orderId, String type){
+    public void HandlePayment(String email, Long id, String type){
         Optional<UserEntity> user = userRepository.findByEmail(email);
 
         if( user.isPresent() ){
-            Long id = Long.parseLong(orderId);
             if( TypePayment.ONE_PAYMENT.name().equals(type) ){
                 this.BuyScript(user.get(), id);
             } else {

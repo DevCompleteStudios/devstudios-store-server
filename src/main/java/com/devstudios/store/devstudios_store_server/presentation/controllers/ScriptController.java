@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devstudios.store.devstudios_store_server.application.dtos.script.CreateScriptDto;
+import com.devstudios.store.devstudios_store_server.application.dtos.script.FreeAccesScriptDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.script.UpdateScriptDto;
 import com.devstudios.store.devstudios_store_server.application.dtos.shared.PaginationDto;
 import com.devstudios.store.devstudios_store_server.application.services.ScriptService;
@@ -63,6 +65,13 @@ public class ScriptController {
     public ResponseEntity<?> buyScript( @PathVariable Long id ) {
         String currentUser = SecurityContextHolder.getContext().getAuthentication().getName();
         var res = service.buyScript(id, currentUser);
+        return ResponseEntity.status(res.getStatus()).body(res);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/free-acces/{id}")
+    public ResponseEntity<?> freeAccesScript( @PathVariable Long id, @Valid @RequestBody FreeAccesScriptDto dto ){
+        var res = service.freeAccesScript(id, dto);
         return ResponseEntity.status(res.getStatus()).body(res);
     }
 
