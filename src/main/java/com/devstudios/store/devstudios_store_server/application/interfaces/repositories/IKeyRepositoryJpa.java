@@ -10,4 +10,5 @@ import com.devstudios.store.devstudios_store_server.domain.entities.KeyEntity;
 
 public interface IKeyRepositoryJpa extends JpaRepository<KeyEntity, Long> {
     public Optional<KeyEntity> findOneByValue(String value);
+    public Optional<KeyEntity> findOneByCurrentUserRobloxIdAndScriptPurchase_Script_Id( String robloxId, Long scriptId );
 }

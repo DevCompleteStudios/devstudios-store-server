@@ -143,11 +143,19 @@ public class AuthService {
     }
 
     public ResponseDto<Boolean> verifyAccesScript( Long scriptId, VerifyAccesScriptDto dto ){
-        KeyEntity key = keyRepository.findByValue(dto.getKey())
-            .orElseThrow( () -> CustomException.badRequestException("Key is not valid!"));
+        KeyEntity key;
+
+        if( dto.getKey() == null ){
+            key = keyRepository.findByRobloxIdAndScriptId(dto.getRobloxId(), scriptId)
+                .orElseThrow( () -> CustomException.notFoundException("Enter key"));
+        } else {
+            key = keyRepository.findByValue(dto.getKey())
+                .orElseThrow( () -> CustomException.badRequestException("Key is not valid!"));
+        }
+
         if( !key.getIsActive() ) throw CustomException.badRequestException("Key is not valid!");
         if( key.getCurrentUserRobloxId() != null && !key.getCurrentUserRobloxId().equals(dto.getRobloxId()) )
-            throw CustomException.badRequestException("This user is not valif for this key");
+            throw CustomException.badRequestException("This user is not valid for this key");
 
         key.setCurrentUserRobloxId(dto.getRobloxId());
 
@@ -166,8 +174,6 @@ public class AuthService {
         keyRepository.save(key);
         return new ResponseDto<>(null, 200, true);
     }
-
-
 
     private Boolean validateScriptPurchase(ScriptEntity currentScript, ScriptPurchaseEntity scriptPurchase){
         if( !scriptPurchase.getIsActive() ) throw CustomException.notFoundException("Purchase is not valid, contact support");

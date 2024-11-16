@@ -7,17 +7,13 @@ import jakarta.validation.constraints.NotNull;
 
 public class VerifyAccesScriptDto {
 
-    @NotNull
-    @NotBlank
-    @UUID
+    @UUID(message = "Key is not valid")
     private String key;
 
     @NotNull
     @NotBlank
     private String robloxId;
 
-
-    
 
     public String getKey() {
         return key;
@@ -35,8 +31,6 @@ public class VerifyAccesScriptDto {
         this.robloxId = robloxId;
     }
 
-
-    
 
 }
 

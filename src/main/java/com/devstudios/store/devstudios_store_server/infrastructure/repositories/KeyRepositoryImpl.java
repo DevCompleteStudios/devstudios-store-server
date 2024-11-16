@@ -29,4 +29,9 @@ public class KeyRepositoryImpl implements IKeyRepository {
         return repositoryJpa.findOneByValue(value);
     }
 
+    @Override
+    public Optional<KeyEntity> findByRobloxIdAndScriptId(String robloxId, Long scriptId) {
+        return repositoryJpa.findOneByCurrentUserRobloxIdAndScriptPurchase_Script_Id(robloxId, scriptId);
+    }
+
 }

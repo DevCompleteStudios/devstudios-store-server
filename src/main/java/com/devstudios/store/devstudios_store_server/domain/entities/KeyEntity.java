@@ -43,7 +43,4 @@ public class KeyEntity extends EntityBase {
         return subscriptionPurchase;
     }
 
-
-
-
 }

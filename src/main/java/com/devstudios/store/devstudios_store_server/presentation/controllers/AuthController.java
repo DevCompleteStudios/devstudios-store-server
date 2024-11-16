@@ -28,6 +28,7 @@ public class AuthController {
     @Autowired
     AuthService service;
 
+
     @PostMapping("/register")
     public ResponseEntity<?> register( @Valid @RequestBody AuthDto authDto ){
         var res = service.registerUser(authDto);
