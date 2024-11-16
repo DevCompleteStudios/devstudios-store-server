@@ -15,6 +15,6 @@ public class FreeAccesScriptDto {
         return email;
     }
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email.trim().toLowerCase();
     }
 }
