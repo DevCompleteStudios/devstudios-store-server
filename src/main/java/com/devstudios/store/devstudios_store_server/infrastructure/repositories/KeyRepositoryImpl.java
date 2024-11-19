@@ -1,5 +1,6 @@
 package com.devstudios.store.devstudios_store_server.infrastructure.repositories;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class KeyRepositoryImpl implements IKeyRepository {
 
     @Override
     public Optional<KeyEntity> findByRobloxIdAndScriptId(String robloxId, Long scriptId) {
-        return repositoryJpa.findOneByCurrentUserRobloxIdAndScriptPurchase_Script_Id(robloxId, scriptId);
+        return repositoryJpa.findFirstByCurrentUserRobloxIdAndScriptPurchase_Script_Id(robloxId, scriptId);
     }
 
 }
