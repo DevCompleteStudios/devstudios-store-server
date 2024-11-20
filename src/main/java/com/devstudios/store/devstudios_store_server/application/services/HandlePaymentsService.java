@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.devstudios.store.devstudios_store_server.application.interfaces.enums.TypePayment;
+import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptPurchaseRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.ISubscriptionRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IUserRepository;
@@ -38,10 +39,12 @@ public class HandlePaymentsService {
     private IMailerService mailerService;
     @Autowired
     private ISubscriptionRepository subscriptionRepository;
+    @Autowired
+    IScriptPurchaseRepository scriptPurchaseRepository;
 
 
 
-    private void BuyScript( UserEntity user, Long scriptId ){
+    private void BuyScript( UserEntity user, Long scriptId, String orderId ){
         try {
             ScriptEntity script = scriptRepository.findById(scriptId)
                 .orElseThrow( () -> CustomException.notFoundException("Not exists"));
@@ -50,6 +53,7 @@ public class HandlePaymentsService {
             purchase.setScript(script);
             purchase.setUser(user);
             purchase.setAmount(script.getPrice());
+            purchase.setUuid(orderId);
 
             KeyEntity key = new KeyEntity();
             purchase.setKey(key);
@@ -63,7 +67,7 @@ public class HandlePaymentsService {
         }
     }
 
-    private void BuySubscription( UserEntity user, Long id ){
+    private void BuySubscription( UserEntity user, Long id, String orderId ){
         try {
             SubscriptionEntity sub = subscriptionRepository.findById(id)
                 .orElseThrow( () -> CustomException.notFoundException("Subscription not found"));
@@ -72,6 +76,8 @@ public class HandlePaymentsService {
             purchase.setSubscription(sub);
             purchase.setUser(user);
             purchase.setAmount(sub.getPrice());
+            purchase.setUuid(orderId);
+
 
             KeyEntity key = new KeyEntity();
             purchase.setKey(key);
@@ -84,6 +90,20 @@ public class HandlePaymentsService {
             this.notifyError(user.getEmail());
         }
     }
+
+    private void cancelBuy( String orderId ){
+        Optional<ScriptPurchaseEntity> purchase = scriptPurchaseRepository.findByUuid(orderId);
+
+        purchase.ifPresent( p -> {
+            p.setIsActive(false);
+            p.getKey().setIsActive(false);
+
+            scriptPurchaseRepository.save(p);
+            System.out.println("La compra se ha cancelado correctamente");
+        });
+    }
+
+    private void cancelSubscripton( String orderId ){}
 
 
     private void notifyError(String email){
@@ -152,15 +172,26 @@ public class HandlePaymentsService {
     }
 
 
-    public void HandlePayment(String email, Long id, String type){
+
+
+
+    public void HandlePayment(String email, Long id, String type, String orderId){
         Optional<UserEntity> user = userRepository.findByEmail(email);
 
         if( user.isPresent() ){
             if( TypePayment.ONE_PAYMENT.name().equals(type) ){
-                this.BuyScript(user.get(), id);
+                this.BuyScript(user.get(), id, orderId);
             } else {
-                this.BuySubscription(user.get(), id);
+                this.BuySubscription(user.get(), id, orderId);
             }
+        }
+    }
+
+    public void handleRefunded( String orderId, String type ){
+        if( TypePayment.ONE_PAYMENT.name().equals(type) ){
+            this.cancelBuy(orderId);
+        } else if ( TypePayment.SUBSCRIPTION.name().equals(type) ){
+            this.cancelSubscripton(orderId);
         }
     }
 

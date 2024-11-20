@@ -1,7 +1,5 @@
 package com.devstudios.store.devstudios_store_server.domain.entities;
 
-import java.util.UUID;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -15,7 +13,7 @@ import jakarta.persistence.Table;
 @Table(name="scripts_purchases")
 public class ScriptPurchaseEntity extends EntityBase {
 
-    private final String uuid = UUID.randomUUID().toString();
+    private String uuid;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "key_id")
@@ -39,6 +37,7 @@ public class ScriptPurchaseEntity extends EntityBase {
     public String getUuid() {
         return uuid;
     }
+    
     public ScriptEntity getScript() {
         return script;
     }
@@ -68,6 +67,10 @@ public class ScriptPurchaseEntity extends EntityBase {
     }
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
 }
