@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.devstudios.store.devstudios_store_server.application.interfaces.enums.TypePayment;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptPurchaseRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IScriptRepository;
+import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.ISubscriptionPurchaseRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.ISubscriptionRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.repositories.IUserRepository;
 import com.devstudios.store.devstudios_store_server.application.interfaces.services.IMailerService;
@@ -41,6 +42,8 @@ public class HandlePaymentsService {
     private ISubscriptionRepository subscriptionRepository;
     @Autowired
     IScriptPurchaseRepository scriptPurchaseRepository;
+    @Autowired
+    ISubscriptionPurchaseRepository subscriptionPurchaseRepository;
 
 
 
@@ -78,7 +81,6 @@ public class HandlePaymentsService {
             purchase.setAmount(sub.getPrice());
             purchase.setUuid(orderId);
 
-
             KeyEntity key = new KeyEntity();
             purchase.setKey(key);
 
@@ -103,7 +105,16 @@ public class HandlePaymentsService {
         });
     }
 
-    private void cancelSubscripton( String orderId ){}
+    private void cancelSubscripton( String orderId ){
+        Optional<SubscriptionPurchaseEntity> entity = subscriptionPurchaseRepository.findByUuid(orderId);
+
+        entity.ifPresent( s -> {
+            s.setIsActive(false);
+            s.getKey().setIsActive(false);
+
+            subscriptionPurchaseRepository.save(s);
+        });
+    }
 
 
     private void notifyError(String email){

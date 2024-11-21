@@ -142,6 +142,9 @@ public class AuthService {
         return new ResponseDto<>(token, 200, userProjection);
     }
 
+
+
+
     public ResponseDto<Boolean> verifyAccesScript( Long scriptId, VerifyAccesScriptDto dto ){
         KeyEntity key;
 
@@ -157,8 +160,6 @@ public class AuthService {
         if( key.getCurrentUserRobloxId() != null && !key.getCurrentUserRobloxId().equals(dto.getRobloxId()) )
             throw CustomException.badRequestException("This user is not valid for this key");
 
-        key.setCurrentUserRobloxId(dto.getRobloxId());
-
         ScriptEntity currentScript = scriptRepository.findById(scriptId)
             .orElseThrow( () -> CustomException.notFoundException("Script not found"));
         if( !currentScript.getIsActive() ) throw CustomException.notFoundException("Script not found");
@@ -171,7 +172,10 @@ public class AuthService {
             throw CustomException.badRequestException("Script not found");
         }
 
-        keyRepository.save(key);
+        if( key.getCurrentUserRobloxId() == null ){
+            key.setCurrentUserRobloxId(dto.getRobloxId());
+            keyRepository.save(key);
+        }
         return new ResponseDto<>(null, 200, true);
     }
 

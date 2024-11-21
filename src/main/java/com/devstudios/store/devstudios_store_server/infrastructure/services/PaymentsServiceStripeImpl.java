@@ -1,7 +1,6 @@
 package com.devstudios.store.devstudios_store_server.infrastructure.services;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +12,7 @@ import com.devstudios.store.devstudios_store_server.application.interfaces.servi
 import com.devstudios.store.devstudios_store_server.application.services.HandlePaymentsService;
 import com.devstudios.store.devstudios_store_server.infrastructure.CustomExceptions.CustomException;
 import com.stripe.Stripe;
+import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import com.stripe.model.Event;
@@ -96,7 +96,7 @@ public class PaymentsServiceStripeImpl implements IPaymentsService {
         try {
             Session session = Session.create(params);
             return session.getUrl();  // Esto obtiene la URL de la sesión de pago
-        } catch (Exception e) {
+        } catch (StripeException e) {
             throw CustomException.internalServerException(e.getMessage());
         }
     }
@@ -109,7 +109,7 @@ public class PaymentsServiceStripeImpl implements IPaymentsService {
             event = Webhook.constructEvent(
                 payload, sigHeader, stripeWebhook
             );
-        } catch (Exception e) {
+        } catch (SignatureVerificationException e) {
             throw CustomException.internalServerException(e.getMessage());
         }
 
@@ -125,15 +125,15 @@ public class PaymentsServiceStripeImpl implements IPaymentsService {
         }
 
         switch (event.getType()) {
-            case "checkout.session.completed": {
+            case "checkout.session.completed" ->  {
                 Session paymentIntent = (Session) stripeObject;
 
                 String email = paymentIntent.getMetadata().get("email");
-                Long productId = Long.parseLong(paymentIntent.getMetadata().get("productId"));
+                Long productId = Long.valueOf(paymentIntent.getMetadata().get("productId"));
                 String type = paymentIntent.getMetadata().get("type");
                 String orderId = randomService.uuid().toString();
 
-                if( email != null && productId != null && type != null && orderId != null ){
+                if( email != null && type != null && orderId != null ){
                     try {
                         ChargeListParams params = ChargeListParams.builder()
                         .setPaymentIntent(paymentIntent.getPaymentIntent())
@@ -155,9 +155,8 @@ public class PaymentsServiceStripeImpl implements IPaymentsService {
 
                     handlePaymentsService.HandlePayment(email, productId, type, orderId);
                 }
-                break;
             }
-            case "charge.refunded": {
+            case "charge.refunded" ->  {
                 Charge charge = (Charge) stripeObject;
                 String orderId = charge.getMetadata().get("orderId");
                 String typePaymentMethod = charge.getMetadata().get("type");
@@ -165,11 +164,8 @@ public class PaymentsServiceStripeImpl implements IPaymentsService {
                 if( orderId != null && typePaymentMethod != null ){
                     handlePaymentsService.handleRefunded(orderId, typePaymentMethod);
                 }
-                break;
             }
-            default:
-                System.out.println("Otro pago: " + event.getType());
-                break;
+            default -> System.out.println("Otro pago: " + event.getType());
         }
     }
 
