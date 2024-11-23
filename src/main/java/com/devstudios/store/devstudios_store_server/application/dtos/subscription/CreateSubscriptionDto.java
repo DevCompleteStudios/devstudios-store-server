@@ -30,7 +30,7 @@ public class CreateSubscriptionDto {
     private Long daysDuration;
 
     @NotNull
-    @Min(value = 2)
+    @Min(value = 1)
     @Max(value = 99)
     private Double price;
 
