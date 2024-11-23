@@ -64,7 +64,12 @@ public class HandlePaymentsService {
             user.getScriptsPurchases().add(purchase);
             userRepository.save(user);
 
-            this.notifyClientPurchaseSucces(user.getEmail(), "Script", script.getName(), script.getPrice(), purchase.getUuid());
+            if( script.getScriptText() != null ){
+                this.notifyClientPurchaseSucces(user.getEmail(), "Script", script.getName(), script.getPrice(), purchase.getUuid(), script.getScriptText());
+            } else {
+                this.notifyClientPurchaseSucces(user.getEmail(), "Script", script.getName(), script.getPrice(), purchase.getUuid());
+            }
+
         } catch (Exception e) {
             notifyError(user.getEmail());
         }
@@ -88,7 +93,9 @@ public class HandlePaymentsService {
             userRepository.save(user);
 
             this.notifyClientPurchaseSucces(user.getEmail(), "Subscription", sub.getName(), sub.getPrice(), purchase.getUuid());
+            System.out.println("Cliente notificado correctamente");
         } catch( Exception ex ){
+            System.out.println(ex.getMessage());
             this.notifyError(user.getEmail());
         }
     }
@@ -121,7 +128,12 @@ public class HandlePaymentsService {
         throw CustomException.internalServerException("Un usuario compro y no recibio su pago. Email del usuario: " + email + " fecha: " + LocalDateTime.now());
     }
 
+
     private void notifyClientPurchaseSucces(String email, String itemType, String itemName, Double amount, String orderId){
+        notifyClientPurchaseSucces(email, itemType, itemName, amount, orderId, "Access from the page to use the available script.");
+    }
+
+    private void notifyClientPurchaseSucces(String email, String itemType, String itemName, Double amount, String orderId, String url){
         String html = """
                 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4;">
                     <div style="max-width: 600px; margin: 20px auto; background-color: #ffffff; padding: 30px; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
@@ -142,6 +154,7 @@ public class HandlePaymentsService {
                                     <li style="padding: 8px 0; border-bottom: 1px solid #e0e0e0;"><strong>Type:</strong> {{itemType}}</li>
                                     <li style="padding: 8px 0; border-bottom: 1px solid #e0e0e0;"><strong>Amount:</strong> ${{amount}}</li>
                                     <li style="padding: 8px 0; border-bottom: 1px solid #e0e0e0;"><strong>Date:</strong> {{purchaseDate}}</li>
+                                    <li style="padding: 8px 0; border-bottom: 1px solid #e0e0e0;"><strong>Script:</strong> {{scriptUrl}}</li>
                                     <li style="padding: 8px 0;"><strong>Order ID:</strong> {{orderId}}</li>
                                 </ul>
                             </div>
@@ -176,6 +189,7 @@ public class HandlePaymentsService {
                 .replace("{{purchaseDate}}", LocalDateTime.now().toString())
                 .replace("{{viewOrderUrl}}", this.urlCLient + "/profile")
                 .replace("{{discordUrl}}", this.discordLink)
+                .replace("{{scriptUrl}}", url)
                 .replace("{{orderId}}", orderId)
                 .replace("{{youtubeUrl}}", this.ytLink);
 

@@ -33,6 +33,7 @@ public class UpdateScriptDto {
 
     private MultipartFile image;
 
+    private String scriptText;
 
 
     public String getName() {
@@ -71,5 +72,10 @@ public class UpdateScriptDto {
     public void setImage(MultipartFile image) {
         this.image = image;
     }
-
+    public String getScriptText() {
+        return scriptText;
+    }
+    public void setScriptText(String scriptText) {
+        this.scriptText = scriptText;
+    }
 }

@@ -109,6 +109,8 @@ public class ScriptService {
                 script.setMethodPayment(updateScriptDto.getMethodPayment());
             if( updateScriptDto.getYoutubeLink() != null )
                 script.setYoutubeLink(updateScriptDto.getYoutubeLink());
+            if( updateScriptDto.getScriptText() != null )
+                script.setScriptText(updateScriptDto.getScriptText());
             if( updateScriptDto.getImage() != null ){
                 String image = filesService.updateFile(script.getImage(), pathImages, updateScriptDto.getImage());
                 script.setImage(image);

@@ -29,6 +29,9 @@ public class ScriptEntity extends EntityBase {
     private String youtubeLink;
     private String image;
 
+    @Column(unique=true)
+    private String scriptText;
+
     @Enumerated(EnumType.STRING)
     private ScriptMethodPayment methodPayment;
 
@@ -87,5 +90,10 @@ public class ScriptEntity extends EntityBase {
     public void setImage(String image) {
         this.image = image;
     }
-
+    public String getScriptText() {
+        return scriptText;
+    }
+    public void setScriptText(String scriptText) {
+        this.scriptText = scriptText;
+    }
 }

@@ -41,6 +41,9 @@ public class CreateScriptDto {
     private String youtubeLink;
 
     @NotNull
+    private String scriptText;
+
+    @NotNull
     private MultipartFile image;
 
 
@@ -80,5 +83,10 @@ public class CreateScriptDto {
     public void setImage(MultipartFile image) {
         this.image = image;
     }
-
+    public String getScriptText() {
+        return scriptText;
+    }
+    public void setScriptText(String scriptText) {
+        this.scriptText = scriptText;
+    }
 }
