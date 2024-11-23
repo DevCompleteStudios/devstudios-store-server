@@ -33,6 +33,7 @@ public class UpdateScriptDto {
 
     private MultipartFile image;
 
+    @URL
     private String scriptText;
 
 

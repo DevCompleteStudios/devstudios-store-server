@@ -64,12 +64,7 @@ public class HandlePaymentsService {
             user.getScriptsPurchases().add(purchase);
             userRepository.save(user);
 
-            if( script.getScriptText() != null ){
-                this.notifyClientPurchaseSucces(user.getEmail(), "Script", script.getName(), script.getPrice(), purchase.getUuid(), script.getScriptText());
-            } else {
-                this.notifyClientPurchaseSucces(user.getEmail(), "Script", script.getName(), script.getPrice(), purchase.getUuid());
-            }
-
+            this.notifyClientPurchaseSucces(user.getEmail(), "Script", script.getName(), script.getPrice(), purchase.getUuid());
         } catch (Exception e) {
             notifyError(user.getEmail());
         }
@@ -130,10 +125,6 @@ public class HandlePaymentsService {
 
 
     private void notifyClientPurchaseSucces(String email, String itemType, String itemName, Double amount, String orderId){
-        notifyClientPurchaseSucces(email, itemType, itemName, amount, orderId, "Access from the page to use the available script.");
-    }
-
-    private void notifyClientPurchaseSucces(String email, String itemType, String itemName, Double amount, String orderId, String url){
         String html = """
                 <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4;">
                     <div style="max-width: 600px; margin: 20px auto; background-color: #ffffff; padding: 30px; border: 1px solid #e0e0e0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
@@ -154,8 +145,8 @@ public class HandlePaymentsService {
                                     <li style="padding: 8px 0; border-bottom: 1px solid #e0e0e0;"><strong>Type:</strong> {{itemType}}</li>
                                     <li style="padding: 8px 0; border-bottom: 1px solid #e0e0e0;"><strong>Amount:</strong> ${{amount}}</li>
                                     <li style="padding: 8px 0; border-bottom: 1px solid #e0e0e0;"><strong>Date:</strong> {{purchaseDate}}</li>
-                                    <li style="padding: 8px 0; border-bottom: 1px solid #e0e0e0;"><strong>Script:</strong> {{scriptUrl}}</li>
                                     <li style="padding: 8px 0;"><strong>Order ID:</strong> {{orderId}}</li>
+                                    <li style="padding: 8px 0;">Remember that you can copy the script from its details</li>
                                 </ul>
                             </div>
 
@@ -166,6 +157,11 @@ public class HandlePaymentsService {
                         <!-- CTA Buttons -->
                         <div style="text-align: center; margin: 30px 0;">
                             <a href="{{viewOrderUrl}}" style="display: inline-block; padding: 12px 24px; margin: 10px; background-color: #000; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold;">View Order</a>
+                        </div>
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a href="{{viewScriptsUrl}}" style="display: inline-block; padding: 12px 24px; margin: 10px; background-color: #000; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold;">
+                                Services
+                            </a>
                         </div>
 
                         <!-- Social Links -->
@@ -188,16 +184,13 @@ public class HandlePaymentsService {
                 .replace("{{amount}}", amount.toString())
                 .replace("{{purchaseDate}}", LocalDateTime.now().toString())
                 .replace("{{viewOrderUrl}}", this.urlCLient + "/profile")
+                .replace("{{viewScriptsUrl}}", this.urlCLient + "/home")
                 .replace("{{discordUrl}}", this.discordLink)
-                .replace("{{scriptUrl}}", url)
                 .replace("{{orderId}}", orderId)
                 .replace("{{youtubeUrl}}", this.ytLink);
 
         mailerService.sendEmail(html, email, "Purchase succes");
     }
-
-
-
 
 
     public void HandlePayment(String email, Long id, String type, String orderId){

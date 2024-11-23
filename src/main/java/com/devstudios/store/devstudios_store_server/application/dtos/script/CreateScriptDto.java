@@ -41,6 +41,7 @@ public class CreateScriptDto {
     private String youtubeLink;
 
     @NotNull
+    @URL
     private String scriptText;
 
     @NotNull
