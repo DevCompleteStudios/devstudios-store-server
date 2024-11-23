@@ -29,7 +29,7 @@ public class ScriptEntity extends EntityBase {
     private String youtubeLink;
     private String image;
 
-    @Column(unique=true)
+    @Column(unique=true, nullable=false)
     private String scriptText;
 
     @Enumerated(EnumType.STRING)
