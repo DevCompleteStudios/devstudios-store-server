@@ -192,7 +192,12 @@ public class AuthService {
 
         LocalDateTime currentDate = LocalDateTime.now();
         if( subscriptionPurchaseEntity.getDateExpired().isBefore(currentDate) )
+        {
+            KeyEntity key = subscriptionPurchaseEntity.getKey();
+            key.setIsActive(false);
+            keyRepository.save(key);
             throw CustomException.badRequestException("Key expired!");
+        }
         if( !subscriptionPurchaseEntity.getIsActive() )
             throw CustomException.badRequestException("Key expired!");
         
